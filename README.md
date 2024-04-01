@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Dynamic Deep Factor Graph
 
 ## Algorithms supported:
@@ -91,7 +91,3 @@ chmod +x ./train_mpe_maddpg.sh
 Local results are stored in subfold scripts/results. Note that we use Weights & Bias as the default visualization platform; to use Weights & Bias, please register and login to the platform first. More instructions for using Weights&Bias can be found in the official [documentation](https://docs.wandb.ai/). Adding the `--use_wandb` in command line or in the .sh file will use Tensorboard instead of Weights & Biases. 
 
 
-
-=======
-# DDFG
->>>>>>> a6d29e56d8596b6ce40895418c459e9acf7b163b
