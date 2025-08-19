@@ -189,7 +189,10 @@ class M_QMix:
 
         curr_Q_tot = self.mixer(agent_qs, cent_obs_batch).squeeze(-1)
         next_step_Q_tot = self.target_mixer(agent_next_qs, cent_nobs_batch).squeeze(-1)
+<<<<<<< HEAD
         #import pdb;pdb.set_trace()
+=======
+>>>>>>> 53301a4 (20250819)
         # all agents must share reward, so get the reward sequence for an agent
         # form bootstrapped targets
         if self.use_popart:

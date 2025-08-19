@@ -11,7 +11,11 @@ path_vdn = r'.\Predator_prey\p=-1.5_r=0\vdn\run{}'
 path_qmix = r'.\Predator_prey\p=-1.5_r=0\qmix\run{}'
 path_cw_qmix = r'.\Predator_prey\p=-1.5_r=0\cw-qmix\run{}'
 path_ow_qmix = r'.\Predator_prey\p=-1.5_r=0\ow-qmix\run{}'
+<<<<<<< HEAD
 path_maddpg = r'.\Predator_prey\p=-1.5_r=0\maddpg\run{}'
+=======
+path_rmappo = r'.\Predator_prey\p=-1.5_r=0\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 path_qtran = r'.\Predator_prey\p=-1.5_r=0\qtran\run{}'
 path_qplex = r'.\Predator_prey\p=-1.5_r=0\qplex\run{}'
 path_dcg = r'.\Predator_prey\p=-1.5_r=0\dcg\run{}'
@@ -23,7 +27,11 @@ path_ddfg = r'.\Predator_prey\p=-1.5_r=0\ddfg\run{}'
 # path_qmix = r'.\Predator_prey\p=-1_r=0\qmix\run{}'
 # path_cw_qmix = r'.\Predator_prey\p=-1_r=0\cw-qmix\run{}'
 # path_ow_qmix = r'.\Predator_prey\p=-1_r=0\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\Predator_prey\p=-1_r=0\maddpg\run{}'
+=======
+# path_rmappo = r'.\Predator_prey\p=-1_r=0\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\Predator_prey\p=-1_r=0\qtran\run{}'
 # path_qplex = r'.\Predator_prey\p=-1_r=0\qplex\run{}'
 # path_dcg = r'.\Predator_prey\p=-1_r=0\dcg\run{}'
@@ -35,7 +43,11 @@ path_ddfg = r'.\Predator_prey\p=-1.5_r=0\ddfg\run{}'
 # path_qmix = r'.\Predator_prey\p=-0.5_r=0\qmix\run{}'
 # path_cw_qmix = r'.\Predator_prey\p=-0.5_r=0\cw-qmix\run{}'
 # path_ow_qmix = r'.\Predator_prey\p=-0.5_r=0\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\Predator_prey\p=-0.5_r=0\maddpg\run{}'
+=======
+# path_rmappo = r'.\Predator_prey\p=-0.5_r=0\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\Predator_prey\p=-0.5_r=0\qtran\run{}'
 # path_qplex = r'.\Predator_prey\p=-0.5_r=0\qplex\run{}'
 # path_dcg = r'.\Predator_prey\p=-0.5_r=0\dcg\run{}'
@@ -47,7 +59,11 @@ path_ddfg = r'.\Predator_prey\p=-1.5_r=0\ddfg\run{}'
 # path_qmix = r'.\Predator_prey\p=0_r=0\qmix\run{}'
 # path_cw_qmix = r'.\Predator_prey\p=0_r=0\cw-qmix\run{}'
 # path_ow_qmix = r'.\Predator_prey\p=0_r=0\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\Predator_prey\p=0_r=0\maddpg\run{}'
+=======
+# path_rmappo = r'.\Predator_prey\p=0_r=0\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\Predator_prey\p=0_r=0\qtran\run{}'
 # path_qplex = r'.\Predator_prey\p=0_r=0\qplex\run{}'
 # path_dcg = r'.\Predator_prey\p=0_r=0\dcg\run{}'
@@ -59,7 +75,11 @@ path_ddfg = r'.\Predator_prey\p=-1.5_r=0\ddfg\run{}'
 # path_qmix = r'.\Predator_prey\p=-1_r=-0.1\qmix\run{}'
 # path_cw_qmix = r'.\Predator_prey\p=-1_r=-0.1\cw-qmix\run{}'
 # path_ow_qmix = r'.\Predator_prey\p=-1_r=-0.1\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\Predator_prey\p=-1_r=-0.1\maddpg\run{}'
+=======
+# path_rmappo = r'.\Predator_prey\p=-1_r=-0.1\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\Predator_prey\p=-1_r=-0.1\qtran\run{}'
 # path_qplex = r'.\Predator_prey\p=-1_r=-0.1\qplex\run{}'
 # path_dcg = r'.\Predator_prey\p=-1_r=-0.1\dcg\run{}'
@@ -71,7 +91,11 @@ path_ddfg = r'.\Predator_prey\p=-1.5_r=0\ddfg\run{}'
 # path_qmix = r'.\Predator_prey\p=-0.5_r=-0.1\qmix\run{}'
 # path_cw_qmix = r'.\Predator_prey\p=-0.5_r=-0.1\cw-qmix\run{}'
 # path_ow_qmix = r'.\Predator_prey\p=-0.5_r=-0.1\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\Predator_prey\p=-0.5_r=-0.1\maddpg\run{}'
+=======
+# path_rmappo = r'.\Predator_prey\p=-0.5_r=-0.1\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\Predator_prey\p=-0.5_r=-0.1\qtran\run{}'
 # path_qplex = r'.\Predator_prey\p=-0.5_r=-0.1\qplex\run{}'
 # path_dcg = r'.\Predator_prey\p=-0.5_r=-0.1\dcg\run{}'
@@ -96,7 +120,11 @@ if __name__ == '__main__':
     r_qmix = []
     r_cw_qmix = []
     r_ow_qmix = []
+<<<<<<< HEAD
     r_maddpg = []
+=======
+    r_rmappo = []
+>>>>>>> 53301a4 (20250819)
     r_qtran = []
     r_qplex = []
     r_dcg = []
@@ -111,7 +139,11 @@ if __name__ == '__main__':
        step1,reward_qmix = read_data(path_qmix.format(i),idx,l) 
        step2,reward_cw_qmix = read_data(path_cw_qmix.format(i),idx,l) 
        step3,reward_ow_qmix = read_data(path_ow_qmix.format(i),idx,l) 
+<<<<<<< HEAD
        step1,reward_maddpg = read_data(path_maddpg.format(i),idx,l) 
+=======
+       step1,reward_rmappo = read_data(path_rmappo.format(i),idx,l) 
+>>>>>>> 53301a4 (20250819)
        step_qtran,reward_qtran = read_data(path_qtran.format(i),idx,l) 
        step_1,reward_qplex = read_data(path_qplex.format(i),idx,l) 
        step1,reward_dcg = read_data(path_dcg.format(i),idx,l) 
@@ -122,7 +154,11 @@ if __name__ == '__main__':
        r_qmix.append(reward_qmix[:num])
        r_cw_qmix.append(reward_cw_qmix[:num])
        r_ow_qmix.append(reward_ow_qmix[:num])
+<<<<<<< HEAD
        r_maddpg.append(reward_maddpg[:num])
+=======
+       r_rmappo.append(reward_rmappo[:num])
+>>>>>>> 53301a4 (20250819)
        r_qtran.append(reward_qtran[:num])
        r_qplex.append(reward_qplex[:num])
        r_dcg.append(reward_dcg[:num])
@@ -135,7 +171,11 @@ if __name__ == '__main__':
     r_qmix = np.stack(r_qmix,axis=1)
     r_cw_qmix = np.stack(r_cw_qmix,axis=1)
     r_ow_qmix = np.stack(r_ow_qmix,axis=1)
+<<<<<<< HEAD
     r_maddpg = np.stack(r_maddpg,axis=1)
+=======
+    r_rmappo = np.stack(r_rmappo,axis=1)
+>>>>>>> 53301a4 (20250819)
     r_qtran = np.stack(r_qtran,axis=1)
     r_qplex = np.stack(r_qplex,axis=1)
     r_dcg = np.stack(r_dcg,axis=1)
@@ -150,7 +190,11 @@ if __name__ == '__main__':
     r_all.append(r_qmix)
     r_all.append(r_cw_qmix)
     r_all.append(r_ow_qmix)
+<<<<<<< HEAD
     r_all.append(r_maddpg)
+=======
+    r_all.append(r_rmappo)
+>>>>>>> 53301a4 (20250819)
     r_all.append(r_qtran)
     r_all.append(r_qplex)
     r_all.append(r_dcg)
@@ -172,7 +216,11 @@ if __name__ == '__main__':
             
 
     color_list = ['blue','orange','sienna','gray','lime','gold','fuchsia','purple','teal','k','red']
+<<<<<<< HEAD
     label_list = ['VDN','QMIX','CW-QMIX','OW-QMIX','MADDPG','QTRAN','QPLEX','DCG','SOPCG','CASEC','DDFG']
+=======
+    label_list = ['VDN','QMIX','CW-QMIX','OW-QMIX','MAPPO','QTRAN','QPLEX','DCG','SOPCG','CASEC','DDFG']
+>>>>>>> 53301a4 (20250819)
     color_list_1 = ['lightsteelblue','yellow','lightgreen','cyan','violet','lightcoral']
     x_list = ['0m','0.4m','0.8m','1.2m','1.6m','2m']
     y_list = ['-60','-40','-20','0','20','40','60']

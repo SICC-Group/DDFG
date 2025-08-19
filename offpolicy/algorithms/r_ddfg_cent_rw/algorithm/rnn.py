@@ -16,6 +16,10 @@ class RNNBase(nn.Module):
         gain = nn.init.calculate_gain(['tanh', 'relu'][self.use_ReLU])
         def init_(m):
             return init(m, init_method, lambda x: nn.init.constant_(x, 0),gain=gain)
+<<<<<<< HEAD
+=======
+      
+>>>>>>> 53301a4 (20250819)
         self.fc1 = nn.Sequential(init_(nn.Linear(input_shape, hidden_size)), active_func, nn.LayerNorm(hidden_size))
         self.fc2 = nn.Sequential(init_(nn.Linear(hidden_size, hidden_size)), active_func, nn.LayerNorm(hidden_size))
         self.rnn = nn.GRU(hidden_size, out_shape)
@@ -41,8 +45,15 @@ class RNNBase(nn.Module):
             rnn_states = rnn_states[None]
         if self._use_feature_normalization:
             inputs = self.norm(inputs)
+<<<<<<< HEAD
         x = self.fc1(inputs)
         x = self.fc2(x)
+=======
+            
+        x = self.fc1(inputs)
+        x = self.fc2(x)
+        
+>>>>>>> 53301a4 (20250819)
         self.rnn.flatten_parameters()
         x, hid = self.rnn(x, rnn_states)
         x = self.rnn_norm(x)

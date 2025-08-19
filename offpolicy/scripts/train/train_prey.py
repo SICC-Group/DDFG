@@ -196,7 +196,11 @@ def main(args):
         def policy_mapping_fn(agent_id): return 'policy_' + str(agent_id)
 
     # choose algo
+<<<<<<< HEAD
     if all_args.algorithm_name in ["rmatd3", "rmaddpg", "rmasac", "qtran","wqmix","qmix", "vdn","qplex","rddfg_cent_rw","rmfg_cent","sopcg","casec"]:
+=======
+    if all_args.algorithm_name in ["rmatd3", "rmaddpg", "rmasac", "qtran","wqmix","qmix", "vdn","qplex","rddfg_cent_rw","rddfg_low","rmfg_cent","sopcg","casec"]:
+>>>>>>> 53301a4 (20250819)
         from offpolicy.runner.rnn.prey_runner import PREYRunner as Runner
         assert all_args.n_rollout_threads == 1, ("only support 1 env in recurrent version.")
         eval_env = make_train_env(all_args)
@@ -209,7 +213,11 @@ def main(args):
     adj = torch.zeros((all_args.num_agents,all_args.num_factor),dtype=torch.int64)
     index = 0
     n = 0
+<<<<<<< HEAD
     if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rddfg_cent_rw","rmfg_cent","sopcg","casec"]:
+=======
+    if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rddfg_cent_rw","rddfg_low","sopcg","casec"]:
+>>>>>>> 53301a4 (20250819)
         for i in range(all_args.num_agents-1):
             for j in range(i+1,all_args.num_agents):
                 adj[i,index] = 1

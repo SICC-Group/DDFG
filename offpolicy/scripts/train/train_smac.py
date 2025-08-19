@@ -136,7 +136,13 @@ def main(args):
         num_factor = num_agents * (num_agents-1) // 2 + num_agents
     else:
         num_factor = int(math.factorial(num_agents)//(math.factorial(all_args.highest_orders)*math.factorial(num_agents-all_args.highest_orders)) * all_args.sparsity)
+<<<<<<< HEAD
         #int(get_map_params(all_args.map_name)["n_enemies"] * 1)
+=======
+        #num_factor = num_agents
+        #num_agents * all_args.highest_orders//4
+    #import pdb;pdb.set_trace()
+>>>>>>> 53301a4 (20250819)
     all_args.num_factor = num_factor
     all_args.num_agents = num_agents
     # create policies and mapping fn
@@ -165,11 +171,19 @@ def main(args):
         def policy_mapping_fn(agent_id): return 'policy_' + str(agent_id)
 
     # choose algo
+<<<<<<< HEAD
     if all_args.algorithm_name in ["rmatd3", "rmaddpg", "rmasac", "qtran","wqmix","qmix", "vdn","qplex","rddfg_cent_rw","rmfg_cent","sopcg","casec"]:
         from offpolicy.runner.rnn.smac_runner import SMACRunner as Runner
         assert all_args.n_rollout_threads == 1, ("only support 1 env in recurrent version.")
         eval_env = make_train_env(all_args)
     elif all_args.algorithm_name in ["matd3", "maddpg", "masac", "mqmix", "mvdn"]:
+=======
+    if all_args.algorithm_name in ["rmatd3", "rmaddpg", "rmasac", "qtran","wqmix","qmix", "vdn","qplex","rddfg_cent_rw","rddfg_low","rmfg_cent","sopcg","casec"]:
+        from offpolicy.runner.rnn.smac_runner import SMACRunner as Runner
+        #assert all_args.n_rollout_threads == 1, ("only support 1 env in recurrent version.")
+        eval_env = make_train_env(all_args)
+    elif all_args.algorithm_name in ["matd3", "maddpg", "masac", "mqmix", "mvdn",'mqtran']:
+>>>>>>> 53301a4 (20250819)
         from offpolicy.runner.mlp.smac_runner import SMACRunner as Runner
         eval_env = make_eval_env(all_args)
     else:
@@ -178,7 +192,11 @@ def main(args):
     adj = torch.zeros((num_agents,num_factor),dtype=torch.int64)
     index = 0
     n = 0
+<<<<<<< HEAD
     if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rddfg_cent_rw","rmfg_cent"]:
+=======
+    if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rddfg_cent_rw","rddfg_low","rmfg_cent"]:
+>>>>>>> 53301a4 (20250819)
         for i in range(num_agents-1):
             for j in range(i+1,num_agents):
                 adj[i,index] = 1
@@ -215,7 +233,11 @@ def main(args):
     df.to_csv(progress_filename,index=False)
     
     progress_filename_train = os.path.join(run_dir,'progress_train.csv')
+<<<<<<< HEAD
     df = pd.DataFrame(columns=['step','loss','Q_tot']) 
+=======
+    df = pd.DataFrame(columns=['step','loss','loss_v','loss_fv']) 
+>>>>>>> 53301a4 (20250819)
     df.to_csv(progress_filename_train,index=False)
     
     progress_filename_train = os.path.join(run_dir,'progress_train_adj.csv')

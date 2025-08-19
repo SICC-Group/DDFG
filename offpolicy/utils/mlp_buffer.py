@@ -228,7 +228,11 @@ class MlpPolicyBuffer(object):
         acts = _cast(self.acts[sample_inds])
         if self.use_reward_normalization:
             mean_reward = self.rewards[:self.filled_i].mean()
+<<<<<<< HEAD
             std_reward = self.rewards[:self.filled_i].std()
+=======
+            std_reward = self.rewards[:self.filled_i].std() + 1e-10
+>>>>>>> 53301a4 (20250819)
             rewards = _cast(
                 (self.rewards[sample_inds] - mean_reward) / std_reward)
         else:

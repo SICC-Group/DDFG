@@ -107,6 +107,7 @@ class ShareVecEnv(ABC):
         return self.step_wait()
 
     def render(self, mode='human'):
+<<<<<<< HEAD
         from utils.util import tile_images
         imgs = self.get_images()
         bigimg = tile_images(imgs)
@@ -117,6 +118,22 @@ class ShareVecEnv(ABC):
             return bigimg
         else:
             raise NotImplementedError
+=======
+        # from utils.util import tile_images
+        # imgs = self.get_images()
+        # bigimg = tile_images(imgs)
+        # if mode == 'human':
+        #     self.get_viewer().imshow(bigimg)
+        #     return self.get_viewer().isopen
+        # elif mode == 'rgb_array':
+        #     return bigimg
+        # else:
+        #     raise NotImplementedError
+        pass
+        
+    
+    
+>>>>>>> 53301a4 (20250819)
 
     def get_images(self):
         """
@@ -167,6 +184,11 @@ def worker(remote, parent_remote, env_fn_wrapper):
                 (env.observation_space, env.share_observation_space, env.action_space))
         elif cmd == 'get_num_agents':
             remote.send((env.num_agents))
+<<<<<<< HEAD
+=======
+        elif cmd == 'get_unit_dim':
+            remote.send((env.unit_dim))
+>>>>>>> 53301a4 (20250819)
         else:
             raise NotImplementedError
 
@@ -259,6 +281,11 @@ def shareworker(remote, parent_remote, env_fn_wrapper):
                 (env.observation_space, env.share_observation_space, env.action_space))
         elif cmd == 'get_num_agents':
             remote.send((env.num_agents))
+<<<<<<< HEAD
+=======
+        elif cmd == 'get_unit_dim':
+            remote.send((env.unit_dim))
+>>>>>>> 53301a4 (20250819)
         else:
             raise NotImplementedError
 
@@ -284,6 +311,11 @@ class ShareSubprocVecEnv(ShareVecEnv):
         )
         self.remotes[0].send(('get_num_agents', None))
         self.num_agents = self.remotes[0].recv()
+<<<<<<< HEAD
+=======
+        self.remotes[0].send(('get_unit_dim', None))
+        self.unit_dim = self.remotes[0].recv()
+>>>>>>> 53301a4 (20250819)
         ShareVecEnv.__init__(self, len(env_fns), observation_space,
                              share_observation_space, action_space)
 
@@ -469,7 +501,14 @@ class ShareDummyVecEnv(ShareVecEnv):
     def close(self):
         for env in self.envs:
             env.close()
+<<<<<<< HEAD
 
+=======
+    
+    def save_replay(self):
+        for env in self.envs:
+            env.save_replay()
+>>>>>>> 53301a4 (20250819)
 
 class ChooseDummyVecEnv(ShareVecEnv):
     def __init__(self, env_fns):

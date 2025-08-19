@@ -36,7 +36,13 @@ import random
 import pygame
 from offpolicy.utils.dict2namedtuple import convert
 from gym.spaces import Discrete
+<<<<<<< HEAD
 
+=======
+from PIL import Image, ImageDraw, ImageColor, ImageFont
+import copy
+import time
+>>>>>>> 53301a4 (20250819)
 # Data type definitions
 int_type = np.int16
 float_type = np.float32
@@ -141,6 +147,19 @@ class StagHunt(MultiAgentEnv):
         self.capture_freezes = getattr(args, "capture_freezes", True)
         self.remove_frozen = getattr(args, "remove_frozen", False)
         self.prevent_cannibalism = getattr(args, "prevent_cannibalism", True) 
+<<<<<<< HEAD
+=======
+        self.render_mode = "human"
+        self.window_size = 500
+        self.window = None
+        self.clock = None
+        self.metadata = {'render.modes': ['human', 'rgb_array'],'render-fps': 4}
+        self.CELL_SIZE = 40
+        self.AGENT_COLOR = ImageColor.getcolor('blue', mode='RGB')
+        self.AGENT_NEIGHBORHOOD_COLOR = (186, 238, 247)
+        self.PREY_COLOR = 'red'
+        self.viewer = None
+>>>>>>> 53301a4 (20250819)
         # Define the internal state
         self.agents = np.zeros((self.n_agents, self.batch_size, 2), dtype=int_type)
         self.agents_not_frozen = np.ones((self.n_agents, self.batch_size), dtype=int_type)
@@ -158,6 +177,10 @@ class StagHunt(MultiAgentEnv):
         self.action_space = []
         self.observation_space = []
         self.share_observation_space = []
+<<<<<<< HEAD
+=======
+
+>>>>>>> 53301a4 (20250819)
         for i in range(self.n_agents):
             self.action_space.append(Discrete(self.n_actions))
             self.observation_space.append(self.get_obs_size())
@@ -187,10 +210,100 @@ class StagHunt(MultiAgentEnv):
         if self.random_ghosts and self.random_ghosts_random_indicator:
             self.ghost_indicator_pos = self.ghost_indicator_potential_positions[
                 random.randint(0, len(self.ghost_indicator_potential_positions)-1)].tolist()
+<<<<<<< HEAD
 
         # self.step(th.zeros(self.n_agents).fill_(self.action_labels['stay']))
         return self.get_obs(), self.get_state(),self.get_avail_actions()
 
+=======
+        # if self.render_mode == 'human':
+        #     self._render_frame()
+        #self.__draw_base_img()
+        # self.step(th.zeros(self.n_agents).fill_(self.action_labels['stay']))
+        return self.get_obs(), self.get_state(),self.get_avail_actions()
+    
+    def __get_neighbour_coordinates(self,agent_pos):
+        neighbours = []
+        for u in range(4):
+            new_pos, collision = self._move_actor(agent_pos, u, 0, np.asarray([0, 1, 2], dtype=int_type))
+            if not collision:
+                neighbours.append(new_pos)
+
+        return neighbours
+
+    def __draw_base_img(self):
+        self._base_img = self.draw_grid(self.x_max, self.y_max, cell_size=self.CELL_SIZE, fill='white')
+
+    def render(self, mode='human'):
+        img = copy.copy(self._base_img)
+        for agent_i in range(self.n_agents):
+            for neighbour in self.__get_neighbour_coordinates(self.agents[agent_i,0]):
+                self.fill_cell(img, neighbour, cell_size=self.CELL_SIZE, fill=self.AGENT_NEIGHBORHOOD_COLOR, margin=0.05)
+            self.fill_cell(img, self.agents[agent_i,0], cell_size=self.CELL_SIZE, fill=self.AGENT_NEIGHBORHOOD_COLOR, margin=0.05)
+
+        for agent_i in range(self.n_agents):
+            self.draw_circle(img, self.agents[agent_i,0], cell_size=self.CELL_SIZE, fill=self.AGENT_COLOR)
+            self.write_cell_text(img, text=str(agent_i + 1), pos=self.agents[agent_i,0], cell_size=self.CELL_SIZE,
+                            fill='white', margin=0.4)
+
+        for prey_i in range(self.n_prey):
+            if self.prey_alive[prey_i]:
+                self.draw_circle(img, self.prey[prey_i,0], cell_size=self.CELL_SIZE, fill=self.PREY_COLOR)
+                self.write_cell_text(img, text=str(prey_i + 1), pos=self.prey[prey_i,0], cell_size=self.CELL_SIZE,
+                                fill='white', margin=0.4)   
+        img.resize((800,800))  
+        img.save('results/Predator_prey/test{}.png'.format(self.steps),dpi=(1500,1500))
+        img = np.asarray(img)
+        
+        if mode == 'rgb_array':
+            return img
+        elif mode == 'human':
+            from gym.envs.classic_control import rendering
+            if self.viewer is None:
+                self.viewer = rendering.SimpleImageViewer()
+            self.viewer.imshow(img)
+            return self.viewer.isopen
+        
+    def _render_frame(self):
+ 
+        if self.window is None and self.render_mode == 'human':
+            pygame.init()
+            pygame.display.init()
+            self.window = pygame.display.set_mode((self.window_size, self.window_size))
+            self.window = pygame.display.set_mode((self.window_size, self.window_size))
+        if self.clock is None and self.render_mode == 'human':
+            self.clock = pygame.time.Clock()
+ 
+        canvas = pygame.Surface((self.window_size, self.window_size))
+        canvas.fill((255, 255, 255))
+        pixel_size = self.window_size // self.x_max
+ 
+        # draw grid
+        for i in range(self.x_max):
+            pygame.draw.line(canvas, (0, 0, 0), (0, i*pixel_size), (self.window_size, i*pixel_size))
+            pygame.draw.line(canvas, (0, 0, 0), (i*pixel_size, 0), (i*pixel_size, self.window_size))
+        
+        # draw prey as rectangle
+        for i in range(self.n_prey):
+            if self.prey_alive[i,0]:
+                pygame.draw.rect(canvas, (255, 0, 0), (self.prey[i,0,1]*pixel_size, self.prey[i,0,0]*pixel_size, pixel_size, pixel_size))
+ 
+        # draw predator as circle
+        for i in range(self.num_agents):
+            if self.agents_not_frozen[i,0]:
+                pygame.draw.circle(canvas, (0, 0, 255), (self.agents[i,0,1]*pixel_size+pixel_size//2, self.agents[i,0,0]*pixel_size+pixel_size//2), pixel_size//2)
+        
+        
+        if self.render_mode == 'human':
+            self.window.blit(canvas, canvas.get_rect())
+            pygame.event.pump()
+            pygame.display.update()
+ 
+            self.clock.tick(self.metadata['render-fps'])
+        else:
+            return np.transpose(pygame.surfarray.array3d(canvas), (1, 0, 2))
+        
+>>>>>>> 53301a4 (20250819)
     def step(self, actions):
         """ Execute a*bs actions in the environment. """
         if not self.batch_mode:
@@ -339,14 +452,31 @@ class StagHunt(MultiAgentEnv):
         #else:
             #for i in range(self.n_agents):
                 #info[i]["episode_limit"] = False
+<<<<<<< HEAD
 
+=======
+        # if self.render_mode == 'human':
+        #     self._render_frame()
+        #self.render()
+        # time.sleep(4)
+>>>>>>> 53301a4 (20250819)
         if terminated[0].all() and self.print_caught_prey:
             print("Episode terminated at time %u with return %g" % (self.steps, self.sum_rewards))
         if self.batch_mode:
             return self.get_obs(), self.get_state(), reward, terminated, infos, self.get_avail_actions()
         else:
             return self.get_obs(), self.get_state(), reward[:,:,None], terminated[0], infos, self.get_avail_actions()
+<<<<<<< HEAD
 
+=======
+        
+
+    def close(self):
+        if self.window is not None:
+            pygame.quit()
+            self.window = None
+            self.clock = None
+>>>>>>> 53301a4 (20250819)
     # ---------- OBSERVATION METHODS -----------------------------------------------------------------------------------
     def get_obs_agent(self, agent_id, batch=0):
         if self.observe_state:
@@ -430,18 +560,31 @@ class StagHunt(MultiAgentEnv):
         return info
 
     # --------- RENDER METHODS -----------------------------------------------------------------------------------------
+<<<<<<< HEAD
     def close(self):
         if self.made_screen:
             pygame.quit()
         print("Closing Multi-Agent Navigation")
+=======
+    # def close(self):
+    #     if self.made_screen:
+    #         pygame.quit()
+    #     print("Closing Multi-Agent Navigation")
+>>>>>>> 53301a4 (20250819)
 
     def render_array(self):
         # Return an rgb array of the frame. Not implemented!
         return None
 
+<<<<<<< HEAD
     def render(self):
         # Not implemented!
         pass
+=======
+    # def render(self):
+    #     # Not implemented!
+    #     pass
+>>>>>>> 53301a4 (20250819)
 
     def seed(self):
         raise NotImplementedError
@@ -583,7 +726,10 @@ class StagHunt(MultiAgentEnv):
         # Final check: if not all agents can see each other, the mutual knowledge is empty
         if noinformation:
             obs = 0 * obs
+<<<<<<< HEAD
 
+=======
+>>>>>>> 53301a4 (20250819)
         # Mask out everything that is not in the cone, if directed_observations=True
         if self.directed_observations:
             obs = self._mask_invisible(obs, agent_ids)
@@ -593,6 +739,94 @@ class StagHunt(MultiAgentEnv):
             return obs, avail_all
         else:
             return obs[:, 0, :].squeeze(), avail_all
+<<<<<<< HEAD
+=======
+    
+    def draw_grid(self, rows, cols, cell_size=50, fill='black', line_color='black'):
+        height = rows * cell_size
+        width = cols * cell_size
+        image = Image.new(mode='RGB', size=(width, height), color=fill)
+
+        # Draw some lines
+        draw = ImageDraw.Draw(image)
+        y_start = 0
+        y_end = image.height
+        step_size = cell_size
+
+        for x in range(0, image.width, step_size):
+            line = ((x, y_start), (x, y_end))
+            draw.line(line, fill=line_color)
+
+        x = image.width - 1
+        line = ((x, y_start), (x, y_end))
+        draw.line(line, fill=line_color)
+
+        x_start = 0
+        x_end = image.width
+
+        for y in range(0, image.height, step_size):
+            line = ((x_start, y), (x_end, y))
+            draw.line(line, fill=line_color)
+
+        y = image.height - 1
+        line = ((x_start, y), (x_end, y))
+        draw.line(line, fill=line_color)
+
+        del draw
+
+        return image
+
+    def fill_cell(self,image, pos, cell_size=None, fill='black', margin=0):
+        assert cell_size is not None and 0 <= margin <= 1
+
+        col, row = pos
+        row, col = row * cell_size, col * cell_size
+        margin *= cell_size
+        x, y, x_dash, y_dash = row + margin, col + margin, row + cell_size - margin, col + cell_size - margin
+        ImageDraw.Draw(image).rectangle([(x, y), (x_dash, y_dash)], fill=fill)
+
+
+    def write_cell_text(self,image, text, pos, cell_size=None, fill='black', margin=0):
+        assert cell_size is not None and 0 <= margin <= 1
+        font = ImageFont.truetype("Times-New-Roman.ttf",20)
+        col, row = pos
+        row, col = row * cell_size, col * cell_size
+        margin *= cell_size
+        x, y = row + margin, col + margin
+        ImageDraw.Draw(image).text((x, y), text=text, fill=fill, font=font)
+
+
+    def draw_cell_outline(self,image, pos, cell_size=50, fill='black'):
+        col, row = pos
+        row, col = row * cell_size, col * cell_size
+        ImageDraw.Draw(image).rectangle([(row, col), (row + cell_size, col + cell_size)], outline=fill, width=3)
+
+
+    def draw_circle(self,image, pos, cell_size=50, fill='black', radius=0.2):
+        col, row = pos
+        row, col = row * cell_size, col * cell_size
+        gap = cell_size * radius
+        x, y = row + gap, col + gap
+        x_dash, y_dash = row + cell_size - gap, col + cell_size - gap
+        ImageDraw.Draw(image).ellipse([(x, y), (x_dash, y_dash)], outline=fill, fill=fill)
+
+
+    def draw_border(self,image, border_width=1, fill='black'):
+        width, height = image.size
+        new_im = Image.new("RGB", size=(width + 2 * border_width, height + 2 * border_width), color=fill)
+        new_im.paste(image, (border_width, border_width))
+        return new_im
+
+
+    def draw_score_board(self,image, score, board_height=30):
+        im_width, im_height = image.size
+        new_im = Image.new("RGB", size=(im_width, im_height + board_height), color='#e1e4e8')
+        new_im.paste(image, (0, board_height))
+
+        _text = ', '.join([str(round(x, 2)) for x in score])
+        ImageDraw.Draw(new_im).text((10, board_height // 3), text=_text, fill='black')
+        return new_im
+>>>>>>> 53301a4 (20250819)
 
     def _mask_agent(self, grid, pos, ashape):
         unknown_dim = 4 if self.observe_one_hot else 1
@@ -637,6 +871,11 @@ class StagHunt(MultiAgentEnv):
     @classmethod
     def get_action_id(cls, label):
         return cls.action_labels[label]
+<<<<<<< HEAD
+=======
+    
+    
+>>>>>>> 53301a4 (20250819)
 
 # ######################################################################################################################
 '''if __name__ == "__main__":
@@ -769,3 +1008,10 @@ class StagHunt(MultiAgentEnv):
     if False:
         state = env.get_state()
         print(state)'''
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> 53301a4 (20250819)

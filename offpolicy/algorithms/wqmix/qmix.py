@@ -81,6 +81,10 @@ class WQMix(Trainer):
         self.parameters += self.central_mixer.parameters()
         #self.optimizer = torch.optim.Adam(params=self.parameters, lr=self.lr, eps=self.opti_eps)
         self.optimizer = torch.optim.RMSprop(params=self.parameters, lr=args.lr, alpha=0.99, eps=0.00001)
+<<<<<<< HEAD
+=======
+        #self.optimizer = torch.optim.RMSprop(params=self.parameters, lr=args.lr)
+>>>>>>> 53301a4 (20250819)
         if self.args.use_double_q:
             print("double Q learning will be used")
 

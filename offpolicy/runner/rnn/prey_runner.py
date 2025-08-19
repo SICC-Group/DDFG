@@ -75,7 +75,11 @@ class PREYRunner(RecRunner):
         episode_f_q = {p_id : np.zeros((self.episode_length, self.num_envs, self.num_factor+self.num_agents, 1), dtype=np.float32) for p_id in self.policy_ids}
         episode_rnn_states = {p_id : np.zeros((self.episode_length + 1, self.num_envs, self.num_agents, self.hidden_size), dtype=np.float32) for p_id in self.policy_ids}
         
+<<<<<<< HEAD
         dones = np.zeros((self.num_envs, self.num_agents, 1), dtype=np.bool)
+=======
+        dones = np.zeros((self.num_envs, self.num_agents, 1), dtype=np.bool_)
+>>>>>>> 53301a4 (20250819)
         t = 0
         while t < self.episode_length:
             obs_batch = np.concatenate(obs)
@@ -86,7 +90,11 @@ class PREYRunner(RecRunner):
                 if self.algorithm_name == 'casec' and self.independent_p_q:
                     _, p_rnn_states_batch ,_ = policy.get_p_hidden_states(obs_batch,last_acts_batch,p_rnn_states_batch)
                 if self.use_dyn_graph:   
+<<<<<<< HEAD
                     prob_adj, adj, _ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),states_batch,self.use_adj_init,explore,self.total_env_steps)
+=======
+                    prob_adj, adj, _ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),states_batch,self.use_adj_init,dones,explore,self.total_env_steps)
+>>>>>>> 53301a4 (20250819)
                     adj_all = torch.cat([adj.cpu().detach(),torch.eye(self.num_agents,dtype=torch.int64).unsqueeze(0)],dim=2)
                     prob_adj = prob_adj[0] 
                     adj = adj[0]
@@ -159,7 +167,11 @@ class PREYRunner(RecRunner):
             if self.algorithm_name in self.adj_correlation:
                 episode_adj[p_id][t] = adj
                 episode_prob_adj[p_id][t] = prob_adj
+<<<<<<< HEAD
                 if self.algorithm_name == "rddfg_cent_rw" and not warmup:
+=======
+                if self.algorithm_name  in ["rddfg_cent_rw","rddfg_low"] and not warmup:
+>>>>>>> 53301a4 (20250819)
                     episode_qtot[p_id][t] = qtot
                     episode_f_q[p_id][t] = f_q
                     if self.use_vfunction:
@@ -169,6 +181,10 @@ class PREYRunner(RecRunner):
             episode_avail_acts[p_id][t] = avail_acts
             t += 1
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 53301a4 (20250819)
             obs = next_obs
             share_obs = next_share_obs
             avail_acts = next_avail_acts
@@ -187,7 +203,11 @@ class PREYRunner(RecRunner):
         if self.algorithm_name in self.adj_correlation:
             _, rnn_states_batch ,_ = policy.get_hidden_states(np.concatenate(obs),last_acts_batch,rnn_states_batch) 
             if self.use_dyn_graph:   
+<<<<<<< HEAD
                 prob_adj, adj,_ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),np.concatenate(share_obs),self.use_adj_init,explore,self.total_env_steps)
+=======
+                prob_adj, adj,_ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),np.concatenate(share_obs),self.use_adj_init,dones,explore,self.total_env_steps)
+>>>>>>> 53301a4 (20250819)
                 prob_adj = prob_adj[0] 
                 adj = adj[0]
             else:
@@ -197,7 +217,13 @@ class PREYRunner(RecRunner):
             episode_adj[p_id][t] = adj
             episode_prob_adj[p_id][t] = prob_adj
             episode_rnn_states[p_id][t] = rnn_states_batch
+<<<<<<< HEAD
             
+=======
+
+        env.close()  
+
+>>>>>>> 53301a4 (20250819)
 
         if explore:
             self.num_episodes_collected += self.num_envs
@@ -212,7 +238,11 @@ class PREYRunner(RecRunner):
                                episode_avail_acts,
                                episode_adj,
                                episode_prob_adj)
+<<<<<<< HEAD
             if self.algorithm_name == "rddfg_cent_rw" and not warmup:
+=======
+            if self.algorithm_name  in ["rddfg_cent_rw","rddfg_low"] and not warmup:
+>>>>>>> 53301a4 (20250819)
                 rewards = self.buffer.norm_reward(ind)
                 idx = self.adj_buffer.insert(self.num_envs,
                                episode_obs,
@@ -232,7 +262,14 @@ class PREYRunner(RecRunner):
                 self.adj_buffer.compute_advantage(idx)      
 
         env_info['average_episode_rewards'] = np.sum(episode_rewards[p_id][:, 0, 0, 0])
+<<<<<<< HEAD
         
+=======
+        #print()
+        #np.savetxt('results/Predator_prey/adj.txt',episode_adj[p_id].reshape(-1,self.num_factor),fmt='%d')
+        #np.savetxt('results/Predator_prey/reward.txt',episode_rewards[p_id][:,0,0])
+        #np.savetxt('results/Predator_prey/acts.txt',np.argmax(episode_acts[p_id],axis=-1)[:,0],fmt='%d')
+>>>>>>> 53301a4 (20250819)
         return env_info
 
     def log(self):

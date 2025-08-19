@@ -293,6 +293,11 @@ class StarCraft2Env(MultiAgentEnv):
         self._run_config = None
         self._sc2_proc = None
         self._controller = None
+<<<<<<< HEAD
+=======
+        self.renderer = None
+        self.reward = 0
+>>>>>>> 53301a4 (20250819)
 
         # Try to avoid leaking SC2 processes on shutdown
         atexit.register(lambda: self.close())
@@ -314,6 +319,11 @@ class StarCraft2Env(MultiAgentEnv):
     def _launch(self):
         """Launch the StarCraft II game."""
         self._run_config = run_configs.get(version=self.game_version)
+<<<<<<< HEAD
+=======
+        #import pdb;pdb.set_trace()
+
+>>>>>>> 53301a4 (20250819)
         _map = maps.get(self.map_name)
         self._seed += 1
 
@@ -352,7 +362,11 @@ class StarCraft2Env(MultiAgentEnv):
                 self.map_x, int(self.map_y / 8))
             self.pathing_grid = np.transpose(np.array([
                 [(b >> i) & 1 for b in row for i in range(7, -1, -1)]
+<<<<<<< HEAD
                 for row in vals], dtype=np.bool))
+=======
+                for row in vals], dtype=np.bool_))
+>>>>>>> 53301a4 (20250819)
         else:
             self.pathing_grid = np.invert(np.flip(np.transpose(np.array(
                 list(map_info.pathing_grid.data), dtype=np.bool).reshape(
@@ -387,6 +401,10 @@ class StarCraft2Env(MultiAgentEnv):
             self.heuristic_targets = [None] * self.n_agents
 
         try:
+<<<<<<< HEAD
+=======
+            #import pdb;pdb.set_trace()
+>>>>>>> 53301a4 (20250819)
             self._obs = self._controller.observe()
             self.init_units()
         except (protocol.ProtocolError, protocol.ConnectionError):
@@ -399,6 +417,11 @@ class StarCraft2Env(MultiAgentEnv):
         if self.debug:
             logging.debug("Started Episode {}"
                           .format(self._episode_count).center(60, "*"))
+<<<<<<< HEAD
+=======
+        
+        #self.render()
+>>>>>>> 53301a4 (20250819)
 
         return self.get_obs(), self.get_state(), available_actions
 
@@ -421,6 +444,10 @@ class StarCraft2Env(MultiAgentEnv):
 
     def step(self, actions):
         """A single environment step. Returns reward, terminated, info."""
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 53301a4 (20250819)
         terminated = False
         bad_transition = False
         infos = [{} for i in range(self.n_agents)]
@@ -478,6 +505,12 @@ class StarCraft2Env(MultiAgentEnv):
 
         self._total_steps += 1
         self._episode_steps += 1
+<<<<<<< HEAD
+=======
+        #(self._episode_steps)
+        # if self._episode_steps == 40:
+        #     import pdb;pdb.set_trace()
+>>>>>>> 53301a4 (20250819)
 
         # Update units
         game_end_code = self.update_units()
@@ -542,12 +575,26 @@ class StarCraft2Env(MultiAgentEnv):
             reward /= self.max_reward / self.reward_scale_rate
 
         rewards = [[reward]]*self.n_agents
+<<<<<<< HEAD
+=======
+        self.reward = reward
+        #self.render()
+        # print(self._episode_steps)
+        # import pdb;pdb.set_trace()
+>>>>>>> 53301a4 (20250819)
 
         return self.get_obs(), self.get_state(), rewards, dones, infos, available_actions
 
     def get_agent_action(self, a_id, action):
         """Construct the action for agent a_id."""
         avail_actions = self.get_avail_agent_actions(a_id)
+<<<<<<< HEAD
+=======
+        # for i in range(self.n_agents):
+        #     print(self.get_avail_agent_actions(i))
+        # print(a_id)
+        # print(self.get_avail_agent_actions(a_id))
+>>>>>>> 53301a4 (20250819)
         assert avail_actions[action] == 1, \
             "Agent {} cannot perform action {}".format(a_id, action)
 
@@ -932,6 +979,10 @@ class StarCraft2Env(MultiAgentEnv):
            during decentralised execution.
         """
         unit = self.get_unit_by_id(agent_id)
+<<<<<<< HEAD
+=======
+        #print(agent_id,unit.pos.x,unit.pos.y,unit.health)
+>>>>>>> 53301a4 (20250819)
 
         move_feats_dim = self.get_obs_move_feats_size()
         enemy_feats_dim = self.get_obs_enemy_feats_size()
@@ -1039,7 +1090,11 @@ class StarCraft2Env(MultiAgentEnv):
                         type_id = self.get_unit_type_id(al_unit, True)
                         ally_feats[i, ind + type_id] = 1
                         ind += self.unit_type_bits
+<<<<<<< HEAD
 
+=======
+                    
+>>>>>>> 53301a4 (20250819)
                     if self.obs_last_action:
                         ally_feats[i, ind:] = self.last_action[al_id]
 
@@ -1451,6 +1506,12 @@ class StarCraft2Env(MultiAgentEnv):
 
     def close(self):
         """Close StarCraft II."""
+<<<<<<< HEAD
+=======
+        if self.renderer is not None:
+            self.renderer.close()
+            self.renderer = None
+>>>>>>> 53301a4 (20250819)
         if self._sc2_proc:
             self._sc2_proc.close()
 
@@ -1458,9 +1519,22 @@ class StarCraft2Env(MultiAgentEnv):
         """Returns the random seed used by the environment."""
         self._seed = seed
 
+<<<<<<< HEAD
     def render(self):
         """Not implemented."""
         pass
+=======
+    def render(self,mode="human"):
+        if self.renderer is None:
+            from .render import StarCraft2Renderer
+
+            self.renderer = StarCraft2Renderer(self, mode)
+        assert (
+                mode == self.renderer.mode
+        ), "mode must be consistent across render calls"
+        return self.renderer.render(mode)
+    
+>>>>>>> 53301a4 (20250819)
 
     def _kill_all_units(self):
         """Kill all units on the map."""
@@ -1492,6 +1566,7 @@ class StarCraft2Env(MultiAgentEnv):
 
             for i in range(len(ally_units_sorted)):
                 self.agents[i] = ally_units_sorted[i]
+<<<<<<< HEAD
                 if self.debug:
                     logging.debug(
                         "Unit {} is {}, x = {}, y = {}".format(
@@ -1501,6 +1576,26 @@ class StarCraft2Env(MultiAgentEnv):
                             self.agents[i].pos.y,
                         )
                     )
+=======
+                #if self.debug:
+                # logging.debug(
+                #     "Unit {} is {}, x = {}, y = {}".format(
+                #         len(self.agents),
+                #         self.agents[i].unit_type,
+                #         self.agents[i].pos.x,
+                #         self.agents[i].pos.y,
+                #     )
+                # )
+                # print(
+                #     "Unit {} is {}, x = {}, y = {}".format(
+                #         len(self.agents),
+                #         self.agents[i].unit_type,
+                #         self.agents[i].pos.x,
+                #         self.agents[i].pos.y,
+                #     )
+                # )
+            #import pdb;pdb.set_trace()
+>>>>>>> 53301a4 (20250819)
 
             for unit in self._obs.observation.raw_data.units:
                 if unit.owner == 2:

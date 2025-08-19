@@ -11,7 +11,11 @@ path_vdn = r'.\smac\3s5z\vdn\run{}'
 path_qmix = r'.\smac\3s5z\qmix\run{}'
 path_cw_qmix = r'.\smac\3s5z\cw-qmix\run{}'
 path_ow_qmix = r'.\smac\3s5z\ow-qmix\run{}'
+<<<<<<< HEAD
 path_maddpg = r'.\smac\3s5z\maddpg\run{}'
+=======
+path_rmappo = r'.\smac\3s5z\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 path_qtran = r'.\smac\3s5z\qtran\run{}'
 path_qplex = r'.\smac\3s5z\qplex\run{}'
 path_dcg = r'.\smac\3s5z\dcg\run{}'
@@ -23,7 +27,11 @@ path_ddfg = r'.\smac\3s5z\ddfg\run{}'
 # path_qmix = r'.\smac\5m_vs_6m\qmix\run{}'
 # path_cw_qmix = r'.\smac\5m_vs_6m\cw-qmix\run{}'
 # path_ow_qmix = r'.\smac\5m_vs_6m\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\smac\5m_vs_6m\maddpg\run{}'
+=======
+# path_rmappo = r'.\smac\5m_vs_6m\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\smac\5m_vs_6m\qtran\run{}'
 # path_qplex = r'.\smac\5m_vs_6m\qplex\run{}'
 # path_dcg = r'.\smac\5m_vs_6m\dcg\run{}'
@@ -35,7 +43,11 @@ path_ddfg = r'.\smac\3s5z\ddfg\run{}'
 # path_qmix = r'.\smac\8m_vs_9m\qmix\run{}'
 # path_cw_qmix = r'.\smac\8m_vs_9m\cw-qmix\run{}'
 # path_ow_qmix = r'.\smac\8m_vs_9m\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\smac\8m_vs_9m\maddpg\run{}'
+=======
+# path_rmappo = r'.\smac\8m_vs_9m\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\smac\8m_vs_9m\qtran\run{}'
 # path_qplex = r'.\smac\8m_vs_9m\qplex\run{}'
 # path_dcg = r'.\smac\8m_vs_9m\dcg\run{}'
@@ -47,7 +59,11 @@ path_ddfg = r'.\smac\3s5z\ddfg\run{}'
 # path_qmix = r'.\smac\MMM2\qmix\run{}'
 # path_cw_qmix = r'.\smac\MMM2\cw-qmix\run{}'
 # path_ow_qmix = r'.\smac\MMM2\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\smac\MMM2\maddpg\run{}'
+=======
+# path_rmappo = r'.\smac\MMM2\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\smac\MMM2\qtran\run{}'
 # path_qplex = r'.\smac\MMM2\qplex\run{}'
 # path_dcg = r'.\smac\MMM2\dcg\run{}'
@@ -59,7 +75,11 @@ path_ddfg = r'.\smac\3s5z\ddfg\run{}'
 # path_qmix = r'.\smac\1c3s5z\qmix\run{}'
 # path_cw_qmix = r'.\smac\1c3s5z\cw-qmix\run{}'
 # path_ow_qmix = r'.\smac\1c3s5z\ow-qmix\run{}'
+<<<<<<< HEAD
 # path_maddpg = r'.\smac\1c3s5z\maddpg\run{}'
+=======
+# path_rmappo = r'.\smac\1c3s5z\rmappo\run{}'
+>>>>>>> 53301a4 (20250819)
 # path_qtran = r'.\smac\1c3s5z\qtran\run{}'
 # path_qplex = r'.\smac\1c3s5z\qplex\run{}'
 # path_dcg = r'.\smac\1c3s5z\dcg\run{}'
@@ -67,6 +87,19 @@ path_ddfg = r'.\smac\3s5z\ddfg\run{}'
 # path_casec = r'.\smac\1c3s5z\casec\run{}'
 # path_ddfg = r'.\smac\1c3s5z\ddfg\run{}'
 
+<<<<<<< HEAD
+=======
+def read_data(path,idx,len):
+    csv_files = glob.glob(os.path.join(path, "*.csv"))
+    step1 = []
+    reward = []
+    df = pd.read_csv(csv_files[idx])
+    step1 = np.append(step1, np.array(df["step"]))
+    reward = np.append(reward, np.array(df["reward"]))
+
+    return np.array(step1)[:len],np.array(reward)[:len]
+
+>>>>>>> 53301a4 (20250819)
 def read_data_1(path,idx,len):
     csv_files = glob.glob(os.path.join(path, "*.csv"))
     step1 = []
@@ -86,7 +119,11 @@ if __name__ == '__main__':
     r_qmix = []
     r_cw_qmix = []
     r_ow_qmix = []
+<<<<<<< HEAD
     r_maddpg = []
+=======
+    r_rmappo = []
+>>>>>>> 53301a4 (20250819)
     r_qtran = []
     r_qplex = []
     r_dcg = []
@@ -101,7 +138,11 @@ if __name__ == '__main__':
         step1,reward_qmix = read_data_1(path_qmix.format(i),idx,l)
         step1,reward_cw_qmix = read_data_1(path_cw_qmix.format(i),idx,l) 
         step1,reward_ow_qmix = read_data_1(path_ow_qmix.format(i),idx,l)  
+<<<<<<< HEAD
         step1,reward_maddpg = read_data_1(path_maddpg.format(i),idx,l) 
+=======
+        step1,reward_rmappo = read_data_1(path_rmappo.format(i),idx,l) 
+>>>>>>> 53301a4 (20250819)
         step_qtran,reward_qtran = read_data_1(path_qtran.format(i),idx,l) 
         step1,reward_qplex = read_data_1(path_qplex.format(i),idx,l) 
         step1,reward_dcg = read_data_1(path_dcg.format(i),idx,l) 
@@ -113,7 +154,11 @@ if __name__ == '__main__':
         r_qmix.append(reward_qmix[:num])
         r_cw_qmix.append(reward_cw_qmix[:num])
         r_ow_qmix.append(reward_ow_qmix[:num])
+<<<<<<< HEAD
         r_maddpg.append(reward_maddpg[:num])
+=======
+        r_rmappo.append(reward_rmappo[:num])
+>>>>>>> 53301a4 (20250819)
         r_qtran.append(reward_qtran[:num])
         r_qplex.append(reward_qplex[:num])
         r_dcg.append(reward_dcg[:num])
@@ -127,7 +172,11 @@ if __name__ == '__main__':
     r_qmix = np.stack(r_qmix,axis=1)
     r_cw_qmix = np.stack(r_cw_qmix,axis=1)
     r_ow_qmix = np.stack(r_ow_qmix,axis=1)
+<<<<<<< HEAD
     r_maddpg = np.stack(r_maddpg,axis=1)
+=======
+    r_rmappo = np.stack(r_rmappo,axis=1)
+>>>>>>> 53301a4 (20250819)
     r_qtran = np.stack(r_qtran,axis=1)
     r_qplex = np.stack(r_qplex,axis=1)
     r_dcg = np.stack(r_dcg,axis=1)
@@ -142,7 +191,11 @@ if __name__ == '__main__':
     r_all.append(r_qmix)
     r_all.append(r_cw_qmix)
     r_all.append(r_ow_qmix)
+<<<<<<< HEAD
     r_all.append(r_maddpg)
+=======
+    r_all.append(r_rmappo)
+>>>>>>> 53301a4 (20250819)
     r_all.append(r_qtran)
     r_all.append(r_qplex)
     r_all.append(r_dcg)
@@ -165,7 +218,11 @@ if __name__ == '__main__':
         r_all[i] = np.mean(r_all[i],axis=1)
 
     color_list = ['blue','orange','sienna','gray','lime','gold','fuchsia','purple','teal','k','red']
+<<<<<<< HEAD
     label_list = ['VDN','QMIX','CW-QMIX','OW-QMIX','MADDPG','QTRAN','QPLEX','DCG','SOPCG','CASEC','DDFG']
+=======
+    label_list = ['VDN','QMIX','CW-QMIX','OW-QMIX','MAPPO','QTRAN','QPLEX','DCG','SOPCG','CASEC','DDFG']
+>>>>>>> 53301a4 (20250819)
     x_list = ['0m','0.4m','0.8m','1.2m','1.6m','2m']
     y_list = ['0','20','40','60','80','100']
     ax = plt.gca()
