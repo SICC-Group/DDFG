@@ -22,11 +22,7 @@ class SMACRunner(MlpRunner):
 
         eval_infos = {}
         eval_infos['win_rate'] = []
-<<<<<<< HEAD
-        eval_infos['average_step_rewards'] = []
-=======
         eval_infos['average_episode_rewards'] = []
->>>>>>> 53301a4 (20250819)
 
         for _ in range(self.args.num_eval_episodes):
             env_info = self.collecter(explore=False, training_episode=False, warmup=False)
@@ -54,20 +50,7 @@ class SMACRunner(MlpRunner):
         env = self.env if explore else self.eval_env
         n_rollout_threads = self.num_envs if explore else self.num_eval_envs
 
-<<<<<<< HEAD
-        if not explore:
-            obs, share_obs, avail_acts = env.reset()
-        else:
-            if self.finish_first_train_reset:
-                obs = self.obs
-                share_obs = self.share_obs
-                avail_acts = self.avail_acts
-            else:
-                obs, share_obs, avail_acts = env.reset()
-                self.finish_first_train_reset = True
-=======
         obs, share_obs, avail_acts = env.reset()
->>>>>>> 53301a4 (20250819)
 
         # init
         agent_deaths = np.zeros((self.num_envs, self.num_agents, 1))
@@ -101,13 +84,9 @@ class SMACRunner(MlpRunner):
             if not isinstance(acts_batch, np.ndarray):
                 acts_batch = acts_batch.cpu().detach().numpy()
             env_acts = np.split(acts_batch, n_rollout_threads)
-<<<<<<< HEAD
-
-=======
             # print(warmup)
             # print(avail_acts)
             # print(env_acts)
->>>>>>> 53301a4 (20250819)
             # env step and store the relevant episode information
             next_obs, next_share_obs, rewards, dones, infos, next_avail_acts = env.step(
                 env_acts)
@@ -115,10 +94,6 @@ class SMACRunner(MlpRunner):
             episode_rewards.append(rewards)
             dones_env = np.all(dones, axis=1)
 
-<<<<<<< HEAD
-            if explore and n_rollout_threads == 1 and np.all(dones_env):
-                next_obs, next_share_obs, next_avail_acts = env.reset()
-=======
 
             if explore and n_rollout_threads == 1 and np.all(dones_env):
                 assert n_rollout_threads == 1, (
@@ -128,21 +103,14 @@ class SMACRunner(MlpRunner):
                         env_info['win_rate'] = 1 if infos[i][0]['won'] else 0
                 env_info['average_episode_rewards'] = np.mean(episode_rewards)
                 return env_info
->>>>>>> 53301a4 (20250819)
 
             if not explore and np.any(dones_env):
                 assert n_rollout_threads == 1, (
                     "only support one env for evaluation in smac domain.")
                 for i in range(n_rollout_threads):
                     if 'won' in infos[i][0].keys():
-<<<<<<< HEAD
-                        if infos[i][0]['won']:  # take one agent
-                            env_info['win_rate'] = 1 if infos[i][0]['won'] else 0
-                env_info['average_step_rewards'] = np.mean(episode_rewards)
-=======
                         env_info['win_rate'] = 1 if infos[i][0]['won'] else 0
                 env_info['average_episode_rewards'] = np.mean(episode_rewards)
->>>>>>> 53301a4 (20250819)
                 return env_info
 
             step_obs[p_id] = obs
@@ -186,14 +154,10 @@ class SMACRunner(MlpRunner):
                     self.total_train_steps += 1
                     self.last_train_T = self.total_env_steps
 
-<<<<<<< HEAD
-        env_info['average_step_rewards'] = np.mean(episode_rewards)
-=======
         for i in range(n_rollout_threads):
             if 'won' in infos[i][0].keys():
                 env_info['win_rate'] = 1 if infos[i][0]['won'] else 0
         env_info['average_episode_rewards'] = np.mean(episode_rewards)
->>>>>>> 53301a4 (20250819)
         return env_info
 
     def log(self):
@@ -217,9 +181,5 @@ class SMACRunner(MlpRunner):
         """See parent class."""
         self.env_infos = {}
 
-<<<<<<< HEAD
-        self.env_infos['average_step_rewards'] = []
-=======
         self.env_infos['win_rate'] = []
         self.env_infos['average_episode_rewards'] = []
->>>>>>> 53301a4 (20250819)

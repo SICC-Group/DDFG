@@ -272,21 +272,13 @@ class R_MFGPolicy_Parallel(MLPPolicy):
             _, best_actions = utils_a.max(dim=-1, keepdim=True)
         return best_actions, best_value
 
-<<<<<<< HEAD
-    def get_actions(self, obs_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False):
-=======
     def get_actions(self, real_obs, obs_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False,dones=None):
->>>>>>> 53301a4 (20250819)
         if len(obs_batch.shape) == 3:
             batch_size = obs_batch.shape[0]
         else:
             batch_size = 1
 
-<<<<<<< HEAD
-        q_batch, idx_node_order, adj, num_edges = self.get_rnn_batch(obs_batch,batch_size,adj_input,no_sequence)
-=======
         q_batch, idx_node_order, adj, num_edges = self.get_rnn_batch(obs_batch,batch_size,adj_input.squeeze(0),no_sequence)
->>>>>>> 53301a4 (20250819)
         
         actions, best_value = self.greedy(adj,q_batch,idx_node_order,available_actions,num_edges,batch_size)
         actions = actions.squeeze()

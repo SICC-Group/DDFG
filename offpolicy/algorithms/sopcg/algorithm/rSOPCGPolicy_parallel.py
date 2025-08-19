@@ -103,11 +103,7 @@ class R_SOPCGPolicy_Parallel(MLPPolicy):
         
         return values
 
-<<<<<<< HEAD
-    def get_actions(self, obs_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False):
-=======
     def get_actions(self, org_obs, obs_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False,dones=None):
->>>>>>> 53301a4 (20250819)
         if len(obs_batch.shape) == 3:
             batch_size = obs_batch.shape[0]
         else:

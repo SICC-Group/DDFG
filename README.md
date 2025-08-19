@@ -1,17 +1,10 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 53301a4 (20250819)
 # Dynamic Deep Factor Graph
 
 ## Algorithms supported:
 - QMIX (MLP and RNN)
 - VDN (MLP and RNN)
 - MADDPG (MLP and RNN)
-<<<<<<< HEAD
-=======
 - WQMIX (RNN)
->>>>>>> 53301a4 (20250819)
 - QTRAN (RNN)
 - QPLEX (RNN)
 - DCG (RNN)
@@ -53,13 +46,8 @@ pip install torch==1.5.1+cu101 torchvision==0.6.1+cu101 -f https://download.pyto
 ```
 
 ```
-<<<<<<< HEAD
-# install on-policy package
-cd off-policy
-=======
 # install DDFG package
 cd DDFG
->>>>>>> 53301a4 (20250819)
 pip install -e .
 ```
 
@@ -94,13 +82,6 @@ There are 3 Cooperative scenarios in MPE:
 * simple_reference
 
 ## 3.Train
-<<<<<<< HEAD
-Here we use train_mpe_maddpg.sh as an example:
-```
-cd offpolicy/scripts
-chmod +x ./train_mpe_maddpg.sh
-./train_mpe_maddpg.sh
-=======
 ### predator-prey
 Here we use train_prey_rmdfg.sh as an example:
 ```
@@ -114,12 +95,7 @@ Here we use train_smac_rmdfg.sh as an example:
 cd offpolicy/scripts
 chmod +x ./train_smac_rmdfg.sh
 ./train_smac_rmdfg.sh
->>>>>>> 53301a4 (20250819)
 ```
 Local results are stored in subfold scripts/results. Note that we use Weights & Bias as the default visualization platform; to use Weights & Bias, please register and login to the platform first. More instructions for using Weights&Bias can be found in the official [documentation](https://docs.wandb.ai/). Adding the `--use_wandb` in command line or in the .sh file will use Tensorboard instead of Weights & Biases. 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 53301a4 (20250819)

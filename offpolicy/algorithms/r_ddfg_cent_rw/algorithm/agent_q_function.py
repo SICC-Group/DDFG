@@ -2,10 +2,7 @@ import torch
 import torch.nn as nn
 from offpolicy.utils.util import init, adj_init
 from offpolicy.utils.util import to_torch
-<<<<<<< HEAD
-=======
 import torch.nn.functional as F
->>>>>>> 53301a4 (20250819)
 
 
 class AgentQFunction(nn.Module):
@@ -16,11 +13,7 @@ class AgentQFunction(nn.Module):
     :param act_dim: (int) dimension of the action space
     :param device: (torch.Device) torch device on which to do computations
     """
-<<<<<<< HEAD
-    def __init__(self, args, input_dim, hidden_dim, act_dim, device):
-=======
     def __init__(self, args, obs_dim, input_dim, num_orders, act_dim, device):
->>>>>>> 53301a4 (20250819)
         super(AgentQFunction, self).__init__()
         self.device = device
         self.tpdv = dict(dtype=torch.float32, device=device)
@@ -31,12 +24,6 @@ class AgentQFunction(nn.Module):
         gain = args.gain
         def init_(m):
             return init(m, init_method, lambda x: nn.init.constant_(x, 0),gain=gain)
-<<<<<<< HEAD
-        self.output_layer = nn.Sequential(init_(nn.Linear(input_dim,act_dim)))
-        self.to(device) 
-
-    def forward(self, x, no_sequence):
-=======
         self.hidden_dim = input_dim
         self.num_orders = num_orders
         self.act_dim = act_dim
@@ -45,7 +32,6 @@ class AgentQFunction(nn.Module):
         self.to(device) 
 
     def forward(self, x, rnn_obs, no_sequence):
->>>>>>> 53301a4 (20250819)
         """
         Compute q values for every action given observations and rnn states.
         :param x: (torch.Tensor) observations from which to compute q values.
@@ -53,15 +39,6 @@ class AgentQFunction(nn.Module):
         :return q_outs: (torch.Tensor) q values for every action
         """
         # make sure input is a torch tensor
-<<<<<<< HEAD
-        x = to_torch(x).to(**self.tpdv)
-
-        q_value = self.output_layer(x)
-        if no_sequence:
-                q_value = q_value[0, :, :]
-
-        return q_value
-=======
         bs = x.shape[0]
 
         x = to_torch(x).to(**self.tpdv).reshape(bs*self.num_orders,-1)
@@ -84,4 +61,3 @@ class AgentQFunction(nn.Module):
         return q_value_norm
 
 
->>>>>>> 53301a4 (20250819)

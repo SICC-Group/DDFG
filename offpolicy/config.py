@@ -7,11 +7,7 @@ def get_config():
 
     # prepare parameters
     parser.add_argument("--algorithm_name", type=str, default="rmatd3", choices=[
-<<<<<<< HEAD
-                        "rmaddpg", "qtran","qplex","wqmix","qmix", "vdn", "matd3", "maddpg", "masac", "mqmix", "mvdn","rmfg_cent","rddfg_cent_rw","sopcg","casec"])
-=======
                         "rmaddpg", "qtran","qplex","wqmix","qmix", "vdn", "matd3", "maddpg", "masac", "mqmix","mqtran", "mvdn","rmfg_cent","rddfg_cent_rw","rddfg_low","sopcg","casec"])
->>>>>>> 53301a4 (20250819)
     parser.add_argument("--experiment_name", type=str, default="check")
     parser.add_argument("--seed", type=int, default=1,
                         help="Random seed for numpy/torch")
@@ -37,11 +33,7 @@ def get_config():
 
     # replay buffer parameters
     parser.add_argument('--episode_length', type=int,
-<<<<<<< HEAD
-                        default=80, help="Max length for any episode")
-=======
                         default=256, help="Max length for any episode")
->>>>>>> 53301a4 (20250819)
     parser.add_argument('--buffer_size', type=int, default=5000,
                         help="Max # of transitions that replay buffer can contain")
     parser.add_argument('--adj_buffer_size', type=int, default=4,
@@ -116,11 +108,8 @@ def get_config():
     # optimizer parameters
     parser.add_argument('--adj_lr', type=float, default=5e-2,
                         help="Learning rate for Adam")
-<<<<<<< HEAD
-=======
     parser.add_argument('--critic_lr', type=float, default=5e-4,
                         help="Learning rate for Adam")
->>>>>>> 53301a4 (20250819)
     parser.add_argument('--lr', type=float, default=5e-4,
                         help="Learning rate for Adam")
     parser.add_argument("--opti_eps", type=float, default=1e-5,

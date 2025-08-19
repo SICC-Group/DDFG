@@ -127,11 +127,7 @@ class R_MFG:
             with torch.no_grad():  
                 if self.args.use_double_q:
                     for i in range(4):
-<<<<<<< HEAD
-                        greedy, _,_ ,_= policy.get_actions(obs_1[1:,2*i:2*i+2].reshape(new_bs,self.num_agents,-1), curr_avail_act_batch[1:,2*i:2*i+2].reshape(new_bs,self.num_agents,-1), None, False, adj_input, no_sequence)
-=======
                         greedy, _,_ ,_= policy.get_actions(None,obs_1[1:,2*i:2*i+2].reshape(new_bs,self.num_agents,-1), curr_avail_act_batch[1:,2*i:2*i+2].reshape(new_bs,self.num_agents,-1), None, False, adj_input.unsqueeze(0), no_sequence)
->>>>>>> 53301a4 (20250819)
                         curr_nact_batch_ind = torch.from_numpy(greedy).max(dim=-1)[1].to(self.device)
                         targ_pol_next_qs = target_policy.get_q_values(target_obs[1:,2*i:2*i+2].reshape(new_bs,self.num_agents,-1), curr_nact_batch_ind.unsqueeze(dim=-1), adj_input,no_sequence)
                         target_policy_qs.append(targ_pol_next_qs.reshape(step-1,batch_size//4))

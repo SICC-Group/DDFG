@@ -2,10 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-<<<<<<< HEAD
-=======
 import setuptools
->>>>>>> 53301a4 (20250819)
 from setuptools import setup, find_packages
 
 def get_version() -> str:

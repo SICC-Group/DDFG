@@ -16,19 +16,12 @@ from torch.nn.parameter import Parameter
 from offpolicy.utils.util import gumbel_softmax_mdfg, to_torch, update_linear_schedule, DecayThenFlatSchedule
 from offpolicy.algorithms.utils.autoencoder import Autoencoder
 from offpolicy.algorithms.utils.adj_policy import AdjPolicy
-<<<<<<< HEAD
-# Network Generator
-# 此类为一个利用Gumbel softmax生成离散网络的类
-class Adj_Generator(nn.Module):
-    def __init__(self, args, obs_dim ,state_dim, device):
-=======
 from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.rnn import RNNBase
 import random
 # Network Generator
 # 此类为一个利用Gumbel softmax生成离散网络的类
 class Adj_Generator(nn.Module):
     def __init__(self, args, obs_dim ,state_dim, act_dim, device):
->>>>>>> 53301a4 (20250819)
         super(Adj_Generator, self).__init__()
         #self.distribution = torch.distributions.bernoulli.Bernoulli(0.1)
         self.adj_hidden_dim = args.adj_hidden_dim
@@ -39,9 +32,6 @@ class Adj_Generator(nn.Module):
         self.alpha = args.adj_alpha
         self.num = 1
         self.device = device
-<<<<<<< HEAD
-        self.adj_policy = AdjPolicy(args,args.hidden_size ,state_dim,device,args.use_ReLU)
-=======
         self.args = args
         if self.args.prev_act_inp:
 	        self.rnn_network_input_dim = obs_dim + act_dim
@@ -50,7 +40,6 @@ class Adj_Generator(nn.Module):
         self.rnn_out_dim = self.args.hidden_size
         self.rnn_hidden_size = self.args.hidden_size
         self.adj_policy = AdjPolicy(args,self.rnn_network_input_dim, args.hidden_size,device,args.use_ReLU)
->>>>>>> 53301a4 (20250819)
         self.exploration = DecayThenFlatSchedule(args.epsilon_start, args.epsilon_finish, args.adj_anneal_time,decay="linear")
         #gen_matrix 为邻接矩阵的概率
         self.device = device
@@ -58,17 +47,6 @@ class Adj_Generator(nn.Module):
         self.tpdv = dict(dtype=torch.float32, device=self.device)
         self.to(device) 
 
-<<<<<<< HEAD
-    def sample(self, obs, state, use_adj_init, explore=False, t_env=None):
-        # 采样——得到一个临近矩阵   
-        batch_size = obs.shape[0]
-        input_batch = to_torch(obs).to(**self.tpdv)
-        if len(state.shape) == 1:
-            state_batch = to_torch(state).to(**self.tpdv).unsqueeze(0)
-        else:
-            state_batch = to_torch(state).to(**self.tpdv)
-        softmax, log_probs = self.adj_policy(input_batch,state_batch,use_adj_init)
-=======
     def get_hidden_states(self, obs, prev_actions, rnn_states):
         if self.args.prev_act_inp:
             prev_action_batch = to_torch(prev_actions)
@@ -90,7 +68,6 @@ class Adj_Generator(nn.Module):
         else:
             rnn_obs_batch = to_torch(rnn_obs).to(**self.tpdv)
         softmax, log_probs = self.adj_policy(input_batch,rnn_obs_batch,use_adj_init,agent_dones)
->>>>>>> 53301a4 (20250819)
         softmax_pre =  softmax.transpose(1,2)
         
         if explore:
@@ -111,10 +88,7 @@ class Adj_Generator(nn.Module):
             value, indices = torch.topk(softmax_pre.reshape(-1,self.num_variable), k=self.highest_orders, dim=1, largest=True)
             value = value.reshape(batch_size,-1,self.highest_orders)
             indices = indices.reshape(batch_size,-1,self.highest_orders)
-<<<<<<< HEAD
-=======
             #import pdb;pdb.set_trace()
->>>>>>> 53301a4 (20250819)
             if self.highest_orders == 3:
                 p_order3 = value[...,0]**3
                 p_order2 = 3*value[...,1]*value[...,2]*(value[...,1]+value[...,2])
@@ -128,19 +102,12 @@ class Adj_Generator(nn.Module):
                 tmp_order2 = indices[chosen_order2]
                 tmp_order2[:,2] = tmp_order2[:,0]
                 indices[chosen_order2] = tmp_order2
-<<<<<<< HEAD
-            else:
-=======
             elif self.highest_orders == 2:
->>>>>>> 53301a4 (20250819)
                 chosen = (value[...,0]**2) > (2*value[...,1])
                 tmp_idx = indices[chosen]
                 tmp_idx[:,1] = tmp_idx[:,0]
                 indices[chosen] = tmp_idx
-<<<<<<< HEAD
-=======
             
->>>>>>> 53301a4 (20250819)
         #softmax[0][0] = 0
         entropy = -softmax * log_probs
         
@@ -150,14 +117,6 @@ class Adj_Generator(nn.Module):
             cond_adj_1 = torch.where(softmax>1e-2,x,y)
         else:
             cond_adj_1 = torch.where(softmax>1e-2,x,y)
-<<<<<<< HEAD
-        cond_adj_2 = torch.zeros_like(softmax,dtype=torch.int64)
-        cond_adj_2= cond_adj_2.transpose(1,2).scatter(2,indices,1).transpose(1,2)
-        cond_adj = cond_adj_1 & cond_adj_2
-        
-        return softmax, cond_adj, entropy.sum(-2).mean(-1)
-
-=======
 
         cond_adj_2 = torch.zeros_like(softmax,dtype=torch.int64)
         cond_adj_2= cond_adj_2.transpose(1,2).scatter(2,indices,1).transpose(1,2)
@@ -173,7 +132,6 @@ class Adj_Generator(nn.Module):
         return softmax, cond_adj, entropy.sum(-2).mean(-1)
       
           
->>>>>>> 53301a4 (20250819)
     def parameters(self):
         parameters_sum = []
         #parameters_sum += self.autoencoder.parameters()
@@ -184,7 +142,3 @@ class Adj_Generator(nn.Module):
     def load_state(self, source_adjnetwork):
         #self.autoencoder.load_state_dict(source_adjnetwork.autoencoder.state_dict())
         self.adj_policy.load_state_dict(source_adjnetwork.adj_policy.state_dict())
-<<<<<<< HEAD
-=======
-
->>>>>>> 53301a4 (20250819)

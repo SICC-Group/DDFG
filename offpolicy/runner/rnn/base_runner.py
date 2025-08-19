@@ -9,10 +9,7 @@ from offpolicy.utils.rec_buffer import RecReplayBuffer, PrioritizedRecReplayBuff
 from offpolicy.utils.adj_buffer import AdjBuffer
 from offpolicy.utils.util import get_cent_act_dim, get_dim_from_space
 from offpolicy.utils.util import DecayThenFlatSchedule
-<<<<<<< HEAD
-=======
 from offpolicy.utils.normalization import RewardScaling
->>>>>>> 53301a4 (20250819)
 
 class RecRunner(object):
     """Base class for training recurrent policies."""
@@ -25,13 +22,8 @@ class RecRunner(object):
         self.args = config["args"]
         self.device = config["device"]
         self.adj = config["adj"]
-<<<<<<< HEAD
-        self.q_learning = ["qplex","qtran","wqmix","qmix","vdn","rddfg_cent_rw","rmfg_cent","sopcg","casec"]
-        self.adj_correlation = ["rddfg_cent_rw","rmfg_cent","sopcg","casec"]
-=======
         self.q_learning = ["qplex","qtran","wqmix","qmix","vdn","rddfg_cent_rw","rddfg_low","rmfg_cent","sopcg","casec"]
         self.adj_correlation = ["rddfg_cent_rw","rddfg_low","rmfg_cent","sopcg","casec"]
->>>>>>> 53301a4 (20250819)
 
         self.share_policy = self.args.share_policy
         self.algorithm_name = self.args.algorithm_name
@@ -70,10 +62,7 @@ class RecRunner(object):
         self.epsilon_anneal_time = self.args.epsilon_anneal_time
         self.total_env_steps = 0  # total environment interactions collected during training
         self.num_episodes_collected = 0  # total episodes collected during training
-<<<<<<< HEAD
-=======
         self.num_adj_episodes_collected = 0
->>>>>>> 53301a4 (20250819)
         self.total_train_steps = 0  # number of gradient updates performed
         self.last_train_episode = 0  # last episode after which a gradient update was performed
         self.last_train_adj_episode = 0
@@ -128,12 +117,8 @@ class RecRunner(object):
         self.env = config["env"]
         self.eval_env = config["eval_env"]
         # no parallel envs
-<<<<<<< HEAD
-        self.num_envs = 1
-=======
         self.num_envs = self.env.num_envs
         self.num_eval_envs = self.eval_env.num_envs
->>>>>>> 53301a4 (20250819)
         self.action_repr_updating = True
         # dir
         #import pdb;pdb.set_trace()
@@ -190,13 +175,10 @@ class RecRunner(object):
             from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.adj_generator_new import Adj_Generator as Adj
             from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.rDDFGPolicy import R_DDFGPolicy as Policy
             from offpolicy.algorithms.r_ddfg_cent_rw.r_ddfg import R_DDFG as TrainAlgo
-<<<<<<< HEAD
-=======
         elif self.algorithm_name == "rddfg_low":
             from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.adj_generator_new import Adj_Generator as Adj
             from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.rDDFGPolicy_low import R_DDFGPolicy as Policy
             from offpolicy.algorithms.r_ddfg_cent_rw.r_ddfg import R_DDFG as TrainAlgo
->>>>>>> 53301a4 (20250819)
         elif self.algorithm_name == "sopcg":
             from offpolicy.algorithms.sopcg.algorithm.adj_generator import Adj_Generator as Adj
             from offpolicy.algorithms.sopcg.algorithm.rSOPCGPolicy_parallel import R_SOPCGPolicy_Parallel as Policy
@@ -231,12 +213,8 @@ class RecRunner(object):
         elif self.algorithm_name in self.adj_correlation:
             self.obs_dim = get_dim_from_space(self.policy_info[self.policy_ids[0]]["obs_space"])
             self.state_dim = get_dim_from_space(self.policy_info[self.policy_ids[0]]["share_obs_space"])
-<<<<<<< HEAD
-            self.adj_network = Adj(self.args,self.obs_dim,self.state_dim,self.device)
-=======
             self.act_dim = get_dim_from_space(self.policy_info[self.policy_ids[0]]["act_space"])
             self.adj_network = Adj(self.args,self.obs_dim,self.state_dim,self.act_dim,self.device)
->>>>>>> 53301a4 (20250819)
             self.trainer = TrainAlgo(self.args, self.num_agents, self.policies, self.adj_network, self.policy_mapping_fn,device=self.device, episode_length=self.episode_length)
         elif self.algorithm_name == "wqmix":
             self.central_policies = {p_id: Central_Policy(config, self.policy_info[p_id]) for p_id in self.policy_ids}
@@ -266,13 +244,9 @@ class RecRunner(object):
         num_train_episodes = (self.num_env_steps / self.episode_length) / (self.train_interval_episode)
         self.beta_anneal = DecayThenFlatSchedule(
             self.per_beta_start, 1.0, num_train_episodes, decay="linear")
-<<<<<<< HEAD
-
-=======
         
         self.reward_scaling = RewardScaling(shape=1, gamma=self.gamma)
         
->>>>>>> 53301a4 (20250819)
         if self.use_per:
             self.buffer = PrioritizedRecReplayBuffer(self.per_alpha,
                                                      self.policy_info,
@@ -305,43 +279,26 @@ class RecRunner(object):
                                           self.hidden_size)
     def run(self):
         """Collect a training episode and perform appropriate training, saving, logging, and evaluation steps."""
-<<<<<<< HEAD
-        # collect data
-        self.trainer.prep_rollout()
-        env_info = self.collecter(explore=True, training_episode=True, warmup=False)
-        for k, v in env_info.items():
-            self.env_infos[k].append(v)
-            
-=======
         self.trainer.prep_rollout()
 
         env_info = self.collecter(explore=True, training_episode=True, warmup=False)
         for k, v in env_info.items():
             self.env_infos[k].append(v)
 
->>>>>>> 53301a4 (20250819)
         # train
         if ((self.num_episodes_collected - self.last_train_episode - self.batch_size) / self.train_interval_episode) >= 1:
             self.train()
             self.total_train_steps += 1
             self.last_train_episode = self.num_episodes_collected - self.batch_size
-<<<<<<< HEAD
-        if self.use_dyn_graph and self.total_env_steps >= self.adj_begin_step and ((self.num_episodes_collected - self.last_train_adj_episode - self.batch_size) / self.train_adj_episode) >= 1 :    
-=======
 
         
         if self.use_dyn_graph and self.total_env_steps >= self.adj_begin_step and ((self.num_adj_episodes_collected - self.last_train_adj_episode) / self.train_adj_episode) >= 1:    
->>>>>>> 53301a4 (20250819)
             if self.use_linear_lr_decay:
                 self.trainer.lr_decay(self.total_env_steps-self.adj_begin_step,self.num_env_steps-self.adj_begin_step)
             if not self.pretrain_adj:
                 self.train_adj()
                 self.log_train_adj(self.train_adj_infos)   
-<<<<<<< HEAD
-            self.last_train_adj_episode = self.num_episodes_collected - self.batch_size
-=======
             self.last_train_adj_episode = self.num_episodes_collected
->>>>>>> 53301a4 (20250819)
         # save
         if self.use_save and (self.total_env_steps - self.last_save_T) / self.save_interval >= 1:
             self.saver()
@@ -370,15 +327,10 @@ class RecRunner(object):
         print("warm up...")
         for _ in range((num_warmup_episodes // self.num_envs)):
             #env_info = self.collecter(explore=True, training_episode=False, warmup=False)
-<<<<<<< HEAD
-            env_info = self.collecter(explore=True, training_episode=False, warmup=True)
-            warmup_rewards.append(env_info['average_episode_rewards'])
-=======
             #env_info = self.collecter(explore=False, training_episode=False, warmup=False)
             env_info = self.collecter(explore=True, training_episode=False, warmup=True)
             warmup_rewards.append(env_info['average_episode_rewards'])
         
->>>>>>> 53301a4 (20250819)
         warmup_reward = np.mean(warmup_rewards)
         print("warmup average episode rewards: {}".format(warmup_reward))
 
@@ -420,56 +372,24 @@ class RecRunner(object):
         self.trainer.prep_training()
         # gradient updates
         self.train_infos = []
-<<<<<<< HEAD
-        
-        '''for p_id in self.policy_ids:
-            if self.use_per:
-                beta = self.beta_anneal.eval(self.total_train_steps)
-                sample = self.buffer.sample(self.batch_size, beta, p_id)
-            else:
-                sample = self.buffer.sample(self.batch_size)
-            if self.algorithm_name == 'casec':
-                train_info, new_priorities, idxes = self.trainer.train_policy_on_batch(sample,self.action_repr_updating)
-            else:
-                train_info, new_priorities, idxes = self.trainer.train_policy_on_batch(sample)
-            if self.use_per:
-                self.buffer.update_priorities(idxes, new_priorities, p_id)
-
-            self.train_infos.append(train_info)'''
-=======
->>>>>>> 53301a4 (20250819)
 
         if self.algorithm_name == 'casec':
             sample = self.buffer.sample(self.batch_size)
             train_info, new_priorities, idxes = self.trainer.train_policy_on_batch(sample,self.action_repr_updating)
             self.train_infos.append(train_info)
-<<<<<<< HEAD
-        else:  
-            for _ in range(4):
-=======
         elif self.algorithm_name == 'rddfg_cent_rw':
             for _ in range(self.train_interval_episode):
->>>>>>> 53301a4 (20250819)
                 for p_id in self.policy_ids:
                     if self.use_per:
                         beta = self.beta_anneal.eval(self.total_train_steps)
                         sample = self.buffer.sample(self.batch_size, beta, p_id)
                     else:
-<<<<<<< HEAD
-                        sample = self.buffer.sample(self.batch_size//4)
-
-                    train_info, new_priorities, idxes = self.trainer.train_policy_on_batch(sample)
-
-=======
                         sample = self.buffer.sample(self.batch_size//self.train_interval_episode)
                     train_info, new_priorities, idxes = self.trainer.train_policy_on_batch(sample)
->>>>>>> 53301a4 (20250819)
                     if self.use_per:
                         self.buffer.update_priorities(idxes, new_priorities, p_id)
 
                     self.train_infos.append(train_info)
-<<<<<<< HEAD
-=======
         else:  
             for p_id in self.policy_ids:
                 if self.use_per:
@@ -482,7 +402,6 @@ class RecRunner(object):
                     self.buffer.update_priorities(idxes, new_priorities, p_id)
 
                 self.train_infos.append(train_info)
->>>>>>> 53301a4 (20250819)
                 
         if self.algorithm_name == 'casec' and self.action_repr_updating:
             self.trainer.update_action_repr()
@@ -580,8 +499,6 @@ class RecRunner(object):
                 os.makedirs(p_save_path)
             rnn_Q = self.policies[pid].rnn_network
             torch.save(rnn_Q.state_dict(), p_save_path + '/rnn_network.pt')
-<<<<<<< HEAD
-=======
             if self.algorithm_name == 'casec':
                 if self.independent_p_q:
                     p_rnn = self.policies[pid].p_rnn_network
@@ -601,7 +518,6 @@ class RecRunner(object):
                 torch.save(policy_vtot.state_dict(), p_save_path + '/vtot_network.pt')
                 
                 
->>>>>>> 53301a4 (20250819)
             for num_orders in range(1,self.highest_orders+1):
                 policy_Q = self.policies[pid].q_network[num_orders]
                 torch.save(policy_Q.state_dict(), p_save_path + '/q_network_{}.pt'.format(num_orders))
@@ -640,20 +556,14 @@ class RecRunner(object):
     def restore_mdfg_cent(self):
         """Load policies policies from pretrained models specified by path in config. Used for QMix and VDN."""
         path_adj = str(self.model_dir)
-<<<<<<< HEAD
-        adj_state_dict = torch.load(path_adj + 'adj_network.pt')   
-=======
         adj_state_dict = torch.load(path_adj + 'adj_network.pt') 
         #,map_location=torch.device('cpu')  
->>>>>>> 53301a4 (20250819)
         self.adj_network.load_state_dict(adj_state_dict)
         for pid in self.policy_ids:
             path = str(self.model_dir) + str(pid)
             print("load the pretrained model from {}".format(path))
             rnn_state_dict = torch.load(path + '/rnn_network.pt')
             self.policies[pid].rnn_network.load_state_dict(rnn_state_dict)
-<<<<<<< HEAD
-=======
             
             rnn_critic_state_dict = torch.load(path + '/rnn_critic_network.pt')
             self.policies[pid].rnn_critic_network.load_state_dict(rnn_critic_state_dict)
@@ -662,7 +572,6 @@ class RecRunner(object):
                 vtot_dict = torch.load(path + '/vtot_network.pt')
                 self.policies[pid].vtot_network.load_state_dict(vtot_dict)
             
->>>>>>> 53301a4 (20250819)
             for num_orders in range(1,self.highest_orders+1):
                 policy_q_state_dict = torch.load(path + '/q_network_{}.pt'.format(num_orders))     
                 self.policies[pid].q_network[num_orders].load_state_dict(policy_q_state_dict)

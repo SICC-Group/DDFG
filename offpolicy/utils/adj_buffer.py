@@ -167,9 +167,6 @@ class AdjPolicyBuffer(object):
         return self.filled_i      
     def compute_advantage(self, idx, value_normalizer=None):
         
-<<<<<<< HEAD
-        f_gae = np.zeros((1,self.num_factor, 1), dtype=np.float32)
-=======
         gae = 0
         m_gae = np.zeros((len(idx),self.num_agents, 1), dtype=np.float32)
         f_gae = np.zeros((len(idx),self.num_factor, 1), dtype=np.float32)
@@ -184,14 +181,11 @@ class AdjPolicyBuffer(object):
             f_gae = f_delta + self.gamma * self.gae_lambda * (1-self.dones_env[step-1,idx]) * f_gae'''
         #self.f_advt = self.f_q
         #import pdb;pdb.set_trace()
->>>>>>> 53301a4 (20250819)
         for step in reversed(range(0,self.rewards.shape[0])):
             #value_normalizer.denormalize(self.qtot[step,idx]
             f_delta = self.f_q[step,idx,:self.num_factor] -  self.f_v[step,idx,:self.num_factor]
             f_gae = f_delta + self.gamma * self.gae_lambda * (1-self.dones_env[step,idx]) * f_gae
             self.f_advt[step,idx] = f_gae
-<<<<<<< HEAD
-=======
             #self.f_advt[step,idx] = self.f_v[step,idx,:self.num_factor]
             '''delta = self.qtot[step,idx] -  self.f_v[step,idx].sum()
             gae = delta + self.gamma * self.gae_lambda * (1-self.dones_env[step-1,idx]) * gae
@@ -210,7 +204,6 @@ class AdjPolicyBuffer(object):
             discount_reward = self.rewards[step,idx,0] + self.gamma * back_reward
             self.advantage[step,idx] = discount_reward
             back_reward = discount_reward'''
->>>>>>> 53301a4 (20250819)
            
         return idx
     
@@ -260,10 +253,7 @@ class AdjPolicyBuffer(object):
         self.f_q[:,idx_range] = f_q.copy()
         self.rnn_obs[:,idx_range] =rnn_obs.copy()
         
-<<<<<<< HEAD
-=======
         
->>>>>>> 53301a4 (20250819)
 
         if self.use_avail_acts:
             self.avail_acts[:, idx_range] = avail_acts.copy()
@@ -295,11 +285,8 @@ class AdjPolicyBuffer(object):
         sampler = [rand[i * mini_batch_size:(i + 1) * mini_batch_size] for i in range(num_mini_batch)]
         
         obs = self.obs[:-1].transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)
-<<<<<<< HEAD
-=======
         #np.stack(self.dones_env[:-1].transpose(1,0,2,3),axis=0)
         #acts = self.acts.reshape(batch_size,self.num_agents,-1)
->>>>>>> 53301a4 (20250819)
         dones = np.concatenate((np.zeros((1, self.buffer_size, self.num_agents,1), dtype=np.float32),self.dones[:-1]))
         dones_env = np.concatenate((np.zeros((1, self.buffer_size,1), dtype=np.float32),self.dones_env[:-1]))
         adj = self.adj[:-1].transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)
@@ -307,15 +294,6 @@ class AdjPolicyBuffer(object):
         advantage = self.advantage
         
         rnn_obs = self.rnn_obs[:-1].transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)
-<<<<<<< HEAD
-        advantage_copy = advantage.copy()
-        advantage_copy[dones_env == 1.0] = np.nan
-        mean_advantage = np.nanmean(advantage_copy[1:])
-        std_advantage = np.nanstd(advantage_copy[1:])
-        advantage[1:] = (advantage[1:] - mean_advantage) / (std_advantage + 1e-10)
-        advantages = advantage.transpose(1,0,2).reshape(batch_size,-1)
-        
-=======
         
         '''advantage_copy = advantage.copy()
         advantage_copy[dones_env == 1.0] = np.nan
@@ -332,16 +310,11 @@ class AdjPolicyBuffer(object):
         margin_advt[1:] = (margin_advt[1:] - mean_advt) / (std_advt + 1e-10)
         margin_advts = margin_advt.transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)'''
         
->>>>>>> 53301a4 (20250819)
         f_advt = self.f_advt
         f_advt_copy = f_advt.copy()
         f_advt_copy[np.tile(dones_env,self.num_factor) == 1.0] = np.nan
         mean_advt_f = np.nanmean(f_advt_copy)
         std_advt_f = np.nanstd(f_advt_copy)
-<<<<<<< HEAD
-        f_advt = (f_advt - mean_advt_f) / (std_advt_f + 1e-5)
-        f_advts = f_advt.transpose(1,0,2,3).reshape(batch_size,self.num_factor,-1)
-=======
         '''f_advt_copy = f_advt.copy()
         f_advt_copy[np.tile(dones_env,self.num_factor) == 1.0] = np.nan
         mean_advt_f = np.nanmean(f_advt_copy.reshape(batch_size,self.num_factor,-1),axis=0)
@@ -350,7 +323,6 @@ class AdjPolicyBuffer(object):
         f_advt = (f_advt - mean_advt_f) / (std_advt_f + 1e-5)
         f_advts = f_advt.transpose(1,0,2,3).reshape(batch_size,self.num_factor,-1)
         #rewards = self.rewards.reshape(batch_size,self.num_agents,-1)
->>>>>>> 53301a4 (20250819)
         dones = dones.transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)
         dones_env = dones_env.transpose(1,0,2).reshape(batch_size,-1)
         if self.use_same_share_obs:
@@ -358,13 +330,10 @@ class AdjPolicyBuffer(object):
         else:
             share_obs = self.share_obs[:-1].transpose(1,0,2,3).reshape(batch_size,self.num_agents,-1)
 
-<<<<<<< HEAD
-=======
         '''if self.use_avail_acts:
             avail_acts = self.avail_acts[:-1].reshape(batch_size,self.num_agents,-1)
         else:
             avail_acts = None'''
->>>>>>> 53301a4 (20250819)
         for indices in sampler:
             obs_batch = []
             share_obs_batch = []
@@ -373,15 +342,9 @@ class AdjPolicyBuffer(object):
             adj_batch = []
             prob_adj_batch = []
             advantages_batch = []
-<<<<<<< HEAD
-            f_advts_batch = []
-            rnn_obs_batch = []
-
-=======
             #margin_advts_batch = []
             f_advts_batch = []
             rnn_obs_batch = []
->>>>>>> 53301a4 (20250819)
             for i in indices:
                 ind = i * data_chunk_length
                 obs_batch.append(obs[ind:ind+data_chunk_length])
@@ -391,10 +354,7 @@ class AdjPolicyBuffer(object):
                 adj_batch.append(adj[ind:ind+data_chunk_length])
                 prob_adj_batch.append(prob_adj[ind:ind+data_chunk_length])
                 advantages_batch.append(advantages[ind:ind+data_chunk_length])
-<<<<<<< HEAD
-=======
                 #margin_advts_batch.append(margin_advts[ind:ind+data_chunk_length])
->>>>>>> 53301a4 (20250819)
                 f_advts_batch.append(f_advts[ind:ind+data_chunk_length])
                 rnn_obs_batch.append(rnn_obs[ind:ind+data_chunk_length])
             obs_batch = np.stack(obs_batch,axis=0)
@@ -404,10 +364,7 @@ class AdjPolicyBuffer(object):
             adj_batch = np.stack(adj_batch,axis=0)
             prob_adj_batch = np.stack(prob_adj_batch,axis=0)
             advantages_batch = np.stack(advantages_batch,axis=0)
-<<<<<<< HEAD
-=======
             #margin_advts_batch = np.stack(margin_advts_batch,axis=0)
->>>>>>> 53301a4 (20250819)
             f_advts_batch = np.stack(f_advts_batch,axis=0)
             rnn_obs_batch = np.stack(rnn_obs_batch,axis=0)
             

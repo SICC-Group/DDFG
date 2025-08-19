@@ -3,10 +3,7 @@ import wandb
 import numpy as np
 from itertools import chain
 from tensorboardX import SummaryWriter
-<<<<<<< HEAD
-=======
 import pandas as pd
->>>>>>> 53301a4 (20250819)
 import torch
 import time
 import sys
@@ -25,11 +22,7 @@ class MlpRunner(object):
         # non-tunable hyperparameters are in args
         self.args = config["args"]
         self.device = config["device"]
-<<<<<<< HEAD
-        self.q_learning = ["mqmix","mvdn","mdfg"]
-=======
         self.q_learning = ["mqmix","mvdn","mdfg","mqtran"]
->>>>>>> 53301a4 (20250819)
 
         # set tunable hyperparameters
         self.share_policy = self.args.share_policy
@@ -76,14 +69,10 @@ class MlpRunner(object):
         else:
             self.use_avail_acts = False
 
-<<<<<<< HEAD
-        self.episode_length = self.args.episode_length
-=======
         if config.__contains__("buffer_length"):
             self.episode_length = config["buffer_length"]
         else:
             self.episode_length = self.args.episode_length
->>>>>>> 53301a4 (20250819)
 
         self.policy_info = config["policy_info"]
         self.policy_ids = sorted(list(self.policy_info.keys()))
@@ -116,12 +105,9 @@ class MlpRunner(object):
         if self.algorithm_name == "matd3":
             from offpolicy.algorithms.matd3.algorithm.MATD3Policy import MATD3Policy as Policy
             from offpolicy.algorithms.matd3.matd3 import MATD3 as TrainAlgo
-<<<<<<< HEAD
-=======
         if self.algorithm_name == "mqtran":
             from offpolicy.algorithms.mqtran.algorithm.QTranPolicy import QTranPolicy as Policy
             from offpolicy.algorithms.mqtran.qtran import QTran as TrainAlgo
->>>>>>> 53301a4 (20250819)
         elif self.algorithm_name == "maddpg":
             from offpolicy.algorithms.maddpg.algorithm.MADDPGPolicy import MADDPGPolicy as Policy
             from offpolicy.algorithms.maddpg.maddpg import MADDPG as TrainAlgo
@@ -378,15 +364,9 @@ class MlpRunner(object):
         print("warm up...")
         for _ in range(int(num_warmup_episodes // self.num_envs) + 1):
             env_info = self.collecter(explore=True, training_episode=False, warmup=True)
-<<<<<<< HEAD
-            warmup_rewards.append(env_info['average_step_rewards'])
-        warmup_reward = np.mean(warmup_rewards)
-        print("warmup average step rewards: {}".format(warmup_reward))
-=======
             warmup_rewards.append(env_info['average_episode_rewards'])
         warmup_reward = np.mean(warmup_rewards)
         print("warmup average episode rewards: {}".format(warmup_reward))
->>>>>>> 53301a4 (20250819)
 
     def log(self):
         raise NotImplementedError
@@ -400,33 +380,24 @@ class MlpRunner(object):
         :param env_info: (dict) contains logging information related to the environment.
         :param suffix: (str) optional string to add to end of keys in env_info when logging.
         """
-<<<<<<< HEAD
-        for k, v in env_info.items():
-            if len(v) > 0:
-                v = np.mean(v)
-=======
         data_env = []
         data_env.append(self.total_env_steps)
         for k, v in env_info.items():
             if len(v) > 0:
                 v = np.mean(v)
                 data_env.append(v)
->>>>>>> 53301a4 (20250819)
                 suffix_k = k if suffix is None else suffix + k 
                 print(suffix_k + " is " + str(v))
                 if self.use_wandb:
                     wandb.log({suffix_k: v}, step=self.total_env_steps)
                 else:
                     self.writter.add_scalars(suffix_k, {suffix_k: v}, self.total_env_steps)
-<<<<<<< HEAD
-=======
         if suffix=="eval_":
             progress_filename = os.path.join(self.run_dir,'progress_eval.csv')
         else:
             progress_filename = os.path.join(self.run_dir,'progress.csv')
         df = pd.DataFrame([data_env])
         df.to_csv(progress_filename,mode='a',header=False,index=False) 
->>>>>>> 53301a4 (20250819)
 
     def log_train(self, policy_id, train_info):
         """

@@ -59,28 +59,16 @@ class R_CASEC:
         for policy in self.policies.values():
             self.policy_parameters += policy.parameters()
             self.action_encoder_params += policy.action_encoder_params()
-<<<<<<< HEAD
-        #self.policy_optimizer = torch.optim.Adam(params=self.policy_parameters, lr=self.lr, eps=self.opti_eps)
-        #Adam
-        #self.action_encoder_optimiser = torch.optim.Adam(params=self.action_encoder_params, lr=self.lr,eps=self.opti_eps)
-        
-        self.policy_optimizer = torch.optim.RMSprop(params=self.policy_parameters, lr=self.lr, alpha=0.99, eps=0.00001)
-=======
         self.policy_optimizer = torch.optim.Adam(params=self.policy_parameters, lr=self.lr, eps=self.opti_eps)
         #Adam
         #self.action_encoder_optimiser = torch.optim.Adam(params=self.action_encoder_params, lr=self.lr,eps=self.opti_eps)
         
         #self.policy_optimizer = torch.optim.RMSprop(params=self.policy_parameters, lr=self.lr, alpha=0.99, eps=0.00001)
->>>>>>> 53301a4 (20250819)
         self.action_encoder_optimiser = torch.optim.RMSprop(params=self.action_encoder_params, lr=self.lr, alpha=0.99, eps=0.00001)
         
         self.adj_parameters += self.adj_network.parameters()
         #self.adj_optimizer = torch.optim.Adam(params=self.adj_parameters, lr=self.adj_lr, eps=self.opti_eps)
-<<<<<<< HEAD
-        self.adj_optimizer =torch.optim.RMSprop(params=self.adj_parameters, lr=self.adj_lr, alpha=0.99, eps=0.00001)
-=======
         self.adj_optimizer = torch.optim.RMSprop(params=self.adj_parameters, lr=self.adj_lr, alpha=0.99, eps=0.00001)
->>>>>>> 53301a4 (20250819)
 
         if args.use_double_q:
             print("double Q learning will be used")
@@ -201,10 +189,6 @@ class R_CASEC:
             qs.append(policy_qs.transpose(0,1))
             target_qs.append(target_max_qvals.transpose(0,1))
         # combine the agent q value sequences to feed into mixer networks
-<<<<<<< HEAD
-=======
-
->>>>>>> 53301a4 (20250819)
         curr_Q_tot = torch.cat(qs, dim=-1).to(self.device)
         next_step_Q_tot = torch.cat(target_qs, dim=-1).to(self.device)
         bad_transitions_mask = torch.cat((torch.zeros(1, batch_size, 1).to(**self.tpdv), dones_env_batch[:self.episode_length - 1, :, :]))

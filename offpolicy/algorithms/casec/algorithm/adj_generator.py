@@ -20,11 +20,7 @@ from offpolicy.utils.util import gumbel_softmax_mdfg
 # Network Generator
 # 此类为一个利用Gumbel softmax生成离散网络的类
 class Adj_Generator(nn.Module):
-<<<<<<< HEAD
-    def __init__(self, args, obs_dim ,state_dim,device, temp = 10, temp_drop_frac = 0.999):
-=======
     def __init__(self, args, obs_dim ,state_dim,act_dim, device, temp = 10, temp_drop_frac = 0.999):
->>>>>>> 53301a4 (20250819)
         super(Adj_Generator, self).__init__()
         #self.distribution = torch.distributions.bernoulli.Bernoulli(0.1)
         self.cluster_rep = Parameter(torch.empty((1, 2),dtype=torch.float32).uniform_(-1,1))

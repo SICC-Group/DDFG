@@ -3,35 +3,21 @@ env="StarCraft2"
 map="5m_vs_6m"
 algo="vdn"
 exp="debug"
-<<<<<<< HEAD
-name=""
-seed_max=126
-seed_min=126
-=======
 name="syc"
 seed_max=88
 seed_min=88
->>>>>>> 53301a4 (20250819)
 
 
 echo "env is ${env}, map is ${map}, algo is ${algo}, exp is ${exp}, max seed is ${seed_max}"
 
 for seed in $(seq ${seed_min} ${seed_max}); do
     echo "seed is ${seed}:"
-<<<<<<< HEAD
-    CUDA_VISIBLE_DEVICES=4 python train/train_smac.py --env_name ${env} \
-=======
     CUDA_VISIBLE_DEVICES=6 python train/train_smac.py --env_name ${env} \
->>>>>>> 53301a4 (20250819)
      --algorithm_name ${algo} --experiment_name ${exp} --map_name ${map} \
       --seed ${seed} --n_training_threads 1 --buffer_size 5000 --lr 1e-3 --batch_size 8 --use_soft_update \
        --hard_update_interval_episode 200 --num_env_steps 2000000 \
        --log_interval 3000 --eval_interval 20000 --user_name ${name}\
-<<<<<<< HEAD
-       --use_global_all_local_state --gain 1 --use_wandb
-=======
        --use_global_all_local_state --gain 1 --use_wandb --gamma 0.97 
->>>>>>> 53301a4 (20250819)
     echo "training is done!"
 done
 

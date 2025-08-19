@@ -4,11 +4,7 @@ import torch_scatter
 import time
 from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.agent_q_function import AgentQFunction
 from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.agent_v_function import AgentVFunction
-<<<<<<< HEAD
-from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.adj_generator import Adj_Generator
-=======
 #from offpolicy.algorithms.r_ddfg_cent_rw.algorithm.adj_generator import Adj_Generator
->>>>>>> 53301a4 (20250819)
 from torch.distributions import Categorical, OneHotCategorical
 from offpolicy.utils.util import get_dim_from_space, is_discrete, is_multidiscrete, make_onehot, DecayThenFlatSchedule, avail_choose, to_torch, to_numpy
 from offpolicy.algorithms.base.mlp_policy import MLPPolicy
@@ -50,21 +46,12 @@ class R_DDFGPolicy(MLPPolicy):
         self.q_out_size = []
         self.q_out_size.append(self.act_dim)
         for num_orders in range(2,self.highest_orders+1):
-<<<<<<< HEAD
-            self.q_out_size.append(num_orders*self.num_rank*self.act_dim)
-=======
             self.q_out_size.append(self.num_rank*self.act_dim)
->>>>>>> 53301a4 (20250819)
         
         self.tpdv = dict(dtype=torch.float32, device=self.device)
         self.use_vfunction = self.args.use_vfunction
         # Local recurrent q network for the agent
         self.rnn_network = RNNBase(self.args, self.rnn_network_input_dim, self.rnn_hidden_size, self.rnn_out_dim, self.device)
-<<<<<<< HEAD
-        self.q_network = {num_orders :AgentQFunction(self.args, self.q_network_input_dim*num_orders, self.q_hidden_size[num_orders-1], self.q_out_size[num_orders-1], self.device) for num_orders in range(1,self.highest_orders+1)}
-        if self.use_vfunction:
-            self.v_network = {num_orders :AgentVFunction(self.args, self.q_network_input_dim*num_orders, self.rnn_hidden_size, 1, self.device) for num_orders in range(1,self.highest_orders+1)}
-=======
         self.rnn_critic_network = RNNBase(self.args, self.central_obs_dim, self.rnn_hidden_size, self.rnn_out_dim, self.device)
 
         self.q_network = {num_orders :AgentQFunction(self.args, self.rnn_network_input_dim, self.q_network_input_dim, num_orders, self.q_out_size[num_orders-1], self.device) for num_orders in range(1,self.highest_orders+1)}
@@ -74,7 +61,6 @@ class R_DDFGPolicy(MLPPolicy):
             self.v_network = {num_orders :AgentVFunction(self.args, self.q_network_input_dim, self.central_obs_dim, num_orders, 1, self.device) for num_orders in range(1,self.highest_orders+1)}
             self.vtot_network = AgentVFunction(self.args, self.q_network_input_dim, self.central_obs_dim, 1, 1, self.device)
         
->>>>>>> 53301a4 (20250819)
         
         if train:
             self.exploration = DecayThenFlatSchedule(self.args.epsilon_start, self.args.epsilon_finish, self.args.epsilon_anneal_time,decay="linear")
@@ -91,11 +77,6 @@ class R_DDFGPolicy(MLPPolicy):
         #import pdb;pdb.set_trace()
         return q_batch,new_rnn_states,no_sequence
       
-<<<<<<< HEAD
-    def get_v_batch(self,obs_batch,adj_input=None,batch_size=1,no_sequence=False,dones=None):
-                
-        list_obs_batch = [[] for i in range(self.highest_orders)]
-=======
     def get_vtot(self, obs, rnn_states):
         input_batch = to_torch(obs)
         
@@ -109,7 +90,6 @@ class R_DDFGPolicy(MLPPolicy):
                 
         list_obs_batch = [[] for i in range(self.highest_orders)]
         list_state_batch = [[] for i in range(self.highest_orders)]
->>>>>>> 53301a4 (20250819)
         num_edges = 0
         q_batch = []
         idx_node_order = []
@@ -125,19 +105,12 @@ class R_DDFGPolicy(MLPPolicy):
             len_i = len(tmp)
             if len_i != 0:
                 list_obs_batch[i] = obs_batch[tmp[:,:1],tmp[:,2:]].reshape(len_i,-1)
-<<<<<<< HEAD
-        
-        for i in range(self.highest_orders):
-            if len(idx_node_order[i]) != 0:
-                q_batch.append(self.v_network[i+1](list_obs_batch[i],no_sequence))
-=======
                 list_state_batch[i] = state_batch[tmp[:,:1]].reshape(len_i,-1)
         
         for i in range(self.highest_orders):
             if len(idx_node_order[i]) != 0:
                 #q_batch.append(self.v_network(list_obs_batch[i],list_state_batch[i],i+1,no_sequence))
                 q_batch.append(self.v_network[i+1](list_obs_batch[i],list_state_batch[i],no_sequence))
->>>>>>> 53301a4 (20250819)
             else:
                 q_batch.append([])               
         
@@ -146,31 +119,19 @@ class R_DDFGPolicy(MLPPolicy):
         for i in range(len(idx_node_order)):
             if len(idx_node_order[i]) != 0:
                 q_batch[i] = q_batch[i] / torch.sum(idx_factor==i+1,dim=-1)[idx_node_order[i][:,0]].unsqueeze(-1)
-<<<<<<< HEAD
-=======
                 
->>>>>>> 53301a4 (20250819)
         #n_f = self.args.num_factor
         #q_batch[0] = torch.where((idx_node_order[0][:,1].unsqueeze(-1)>n_f) & (dones[idx_node_order[0][:,0],torch.clamp(idx_node_order[0][:,1]-n_f,min=-1)]==1),torch.zeros_like(q_batch[0]),q_batch[0])     
         return q_batch, idx_node_order, adj_input.transpose(1,2), num_edges   
       
-<<<<<<< HEAD
-    def get_v_values(self, obs_batch,adj_input=None,no_sequence=False,dones=None):
-=======
     def get_v_values(self, obs_batch ,state_batch, adj_input=None,no_sequence=False,dones=None):
->>>>>>> 53301a4 (20250819)
 
         if len(obs_batch.shape) == 3:
             batch_size = obs_batch.shape[0]
         else:
             batch_size = 1
-<<<<<<< HEAD
-            
-        v_batch, idx_node_order, adj , num_edges= self.get_v_batch(obs_batch, adj_input,batch_size,no_sequence,dones) #0.00358
-=======
 
         v_batch, idx_node_order, adj , num_edges= self.get_v_batch(obs_batch, to_torch(state_batch).to(**self.tpdv),adj_input,batch_size,no_sequence,dones) #0.00358
->>>>>>> 53301a4 (20250819)
 
         if batch_size == 1:
             values = self.v_local_values(v_batch, idx_node_order)
@@ -179,10 +140,6 @@ class R_DDFGPolicy(MLPPolicy):
             for i in range(len(idx_node_order)):
                 if len(idx_node_order[i]) != 0:
                     f_v[idx_node_order[i][:,0],idx_node_order[i][:,1]] = v_batch[i]
-<<<<<<< HEAD
-=======
-
->>>>>>> 53301a4 (20250819)
             values =  f_v.sum(dim=1)
            
         return values
@@ -203,16 +160,10 @@ class R_DDFGPolicy(MLPPolicy):
         # Return the Q-values for the given actions
         return values_f #vadj_inputalues_f[:,:self.num_factor-self.n_agents]
       
-<<<<<<< HEAD
-    def get_rnn_batch(self,obs_batch,adj_input=None,batch_size=1,no_sequence=False,dones=None):
-                
-        list_obs_batch = [[] for i in range(self.highest_orders)]
-=======
     def get_rnn_batch(self,obs_batch,rnn_states_batch,adj_input=None,batch_size=1,no_sequence=False,dones=None):
                 
         list_obs_batch = [[] for i in range(self.highest_orders)]
         list_rnn_batch = [[] for i in range(self.highest_orders)]
->>>>>>> 53301a4 (20250819)
         num_edges = 0
         q_batch = []
         idx_node_order = []
@@ -227,12 +178,6 @@ class R_DDFGPolicy(MLPPolicy):
             len_i = len(tmp)
             if len_i != 0:
                 list_obs_batch[i] = obs_batch[tmp[:,:1],tmp[:,2:]].reshape(len_i,-1)
-<<<<<<< HEAD
-        
-        for i in range(self.highest_orders):
-            if len(idx_node_order[i]) != 0:
-                q_batch.append(self.q_network[i+1](list_obs_batch[i],no_sequence))
-=======
                 list_rnn_batch[i] = rnn_states_batch[tmp[:,:1],tmp[:,2:]].reshape(len_i,-1)
                 
         for i in range(self.highest_orders):
@@ -240,47 +185,30 @@ class R_DDFGPolicy(MLPPolicy):
             if len(tmp) != 0:
                 #q_batch.append(self.q_network(list_obs_batch[i],list_rnn_batch[i],i+1,no_sequence))
                 q_batch.append(self.q_network[i+1](list_obs_batch[i],list_rnn_batch[i],no_sequence))
->>>>>>> 53301a4 (20250819)
             else:
                 q_batch.append([])
                 
         if self.highest_orders > 1 and len(idx_node_order[1]) != 0:
             dim = list(q_batch[1].shape[:-1])
             tmp = q_batch[1].view(*[np.prod(dim) , self.num_rank, 2, self.act_dim])
-<<<<<<< HEAD
-            q_batch[1] = torch.einsum('abi,abj->aij',tmp[:,:,0],tmp[:,:,1]).reshape(np.prod(dim),-1)
-=======
             q_ij = torch.einsum('abi,abj->aij',tmp[:,:,0],tmp[:,:,1]).permute(0, 2, 1)
             q_batch[1] = q_ij.reshape(np.prod(dim),-1)
             #q_batch[1] = (q_ij+q_ij.permute(0, 2, 1).detach()/2).reshape(np.prod(dim),-1)
             #mport pdb;pdb.set_trace()
->>>>>>> 53301a4 (20250819)
         if self.highest_orders == 3 and len(idx_node_order[2]) != 0:
             dim = list(q_batch[2].shape[:-1])
             tmp = q_batch[2].view(*[np.prod(dim) , self.num_rank, 3, self.act_dim])
             q_batch[2] = torch.einsum('abi,abj,abk->aijk',tmp[:,:,0],tmp[:,:,1],tmp[:,:,2]).reshape(np.prod(dim),-1)
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 53301a4 (20250819)
         num_edges = adj_input.sum()
         idx_factor = torch.sum(adj_input.transpose(1,2),dim=1)
         for i in range(len(idx_node_order)):
             if len(idx_node_order[i]) != 0:
                 q_batch[i] = q_batch[i] / torch.sum(idx_factor==i+1,dim=-1)[idx_node_order[i][:,0]].unsqueeze(-1)
-<<<<<<< HEAD
-    
-        return q_batch, idx_node_order, adj_input.transpose(1,2), num_edges
-      
-    def get_q_values(self, obs_batch, action_batch, adj_input=None,no_sequence=False,dones=None):
-=======
                 
     
         return q_batch, idx_node_order, adj_input.transpose(1,2), num_edges
       
     def get_q_values(self, obs_batch, rnn_q_states_batch, action_batch, adj_input=None,no_sequence=False,dones=None):
->>>>>>> 53301a4 (20250819)
         """
         Computes q values using the given information.
         :param obs_batch: (np.ndarray) agent observations from which to compute q values
@@ -293,11 +221,7 @@ class R_DDFGPolicy(MLPPolicy):
         else:
             batch_size = 1
             
-<<<<<<< HEAD
-        q_batch, idx_node_order, adj , num_edges= self.get_rnn_batch(obs_batch, adj_input,batch_size,no_sequence,dones) #0.00358
-=======
         q_batch, idx_node_order, adj , num_edges= self.get_rnn_batch(obs_batch.to(**self.tpdv),rnn_q_states_batch.to(**self.tpdv),adj_input,batch_size,no_sequence,dones) #0.00358
->>>>>>> 53301a4 (20250819)
         values = self.q_values(q_batch, action_batch.type(torch.int64), idx_node_order,batch_size)  #0.0002
 
         return values
@@ -382,10 +306,7 @@ class R_DDFGPolicy(MLPPolicy):
                 edge_actions_3 = edge_actions_3.unsqueeze(dim=-1)
             values_f[0,idx_node_order[2][:,1]] = f[0][idx_node_order[2][:,1]].gather(dim=-1, index=edge_actions_3)
         # Return the Q-values for the given actions
-<<<<<<< HEAD
-=======
         #import pdb;pdb.set_trace()
->>>>>>> 53301a4 (20250819)
         return values_f
       
     def greedy(self, adj, q_batch, idx_node_order,available_actions,num_edges,batch_size):
@@ -466,10 +387,7 @@ class R_DDFGPolicy(MLPPolicy):
                 for i in range(3):
                     if min(idx_type[i][0].shape) != 0:
                         messages_a2Q[idx_type[i][0]] = joint_a2Q[idx_type[i][0]].unsqueeze(num_dim[i][0]).unsqueeze(num_dim[i][1])
-<<<<<<< HEAD
-=======
                         
->>>>>>> 53301a4 (20250819)
                 '''if self.args.msg_normalized:
                     messages_a2Q -= torch.where(torch.isfinite(messages_a2Q), messages_a2Q, zeros_a2Q).mean(dim=-1, keepdim=True)'''
 
@@ -478,11 +396,7 @@ class R_DDFGPolicy(MLPPolicy):
                 if self.args.msg_anytime:
                     # Find currently best actions and the (true) value of these actions 
                     actions = utils_a.max(dim=-1, keepdim=True)[1]
-<<<<<<< HEAD
-                    
-=======
                
->>>>>>> 53301a4 (20250819)
                     value = self.q_values(in_q_batch, actions,idx_node_order,batch_size)
                     # Update best_actions only for the batches that have a higher value than best_value
                     change = value > best_value
@@ -497,21 +411,13 @@ class R_DDFGPolicy(MLPPolicy):
             _, best_actions = utils_a.max(dim=-1, keepdim=True)
         return best_actions, best_value, None, best_f_value
       
-<<<<<<< HEAD
-    def get_actions(self, obs_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False,dones=None):
-=======
     def get_actions(self, obs_batch, rnn_q_states_batch, available_actions=None, t_env=None, explore=False,adj_input = None,no_sequence = False,dones=None):
->>>>>>> 53301a4 (20250819)
         if len(obs_batch.shape) == 3:
             batch_size = obs_batch.shape[0]
         else:
             batch_size = 1
             
-<<<<<<< HEAD
-        q_batch, idx_node_order, adj, num_edges = self.get_rnn_batch(obs_batch,adj_input,batch_size,no_sequence,dones)
-=======
         q_batch, idx_node_order, adj, num_edges = self.get_rnn_batch(to_torch(obs_batch).to(**self.tpdv),rnn_q_states_batch.to(**self.tpdv),adj_input,batch_size,no_sequence,dones)
->>>>>>> 53301a4 (20250819)
         actions, best_value,best_margin_value, best_f_value = self.greedy(adj,q_batch,idx_node_order,available_actions,num_edges,batch_size)
 
         actions = actions.squeeze()
@@ -538,13 +444,8 @@ class R_DDFGPolicy(MLPPolicy):
             if explore:
                 eps = self.exploration.eval(t_env)
                 rand_numbers = np.random.rand(self.n_agents)
-<<<<<<< HEAD
-                # random actions sample uniformly from action space
-                logits = avail_choose(torch.ones(self.n_agents, self.act_dim), available_actions)
-=======
                 logits = avail_choose(torch.ones(self.n_agents, self.act_dim), available_actions)
                 
->>>>>>> 53301a4 (20250819)
                 random_actions = Categorical(logits=logits).sample().numpy()
                 take_random = (rand_numbers < eps).astype(int)
                 #take_random表示在每一条轨迹初始多采取随机动作，后面多采取指定动作
@@ -581,16 +482,6 @@ class R_DDFGPolicy(MLPPolicy):
     def parameters(self):
         parameters_sum = []
         parameters_sum += self.rnn_network.parameters()
-<<<<<<< HEAD
-        for num_orders in range(1,self.highest_orders+1):
-            parameters_sum += self.q_network[num_orders].parameters()
-            if self.use_vfunction:
-                parameters_sum += self.v_network[num_orders].parameters()
-        return parameters_sum
-
-    def load_state(self, source_policy):
-        self.rnn_network.load_state_dict(source_policy.rnn_network.state_dict())
-=======
         #parameters_sum += self.q_network.parameters()
         for num_orders in range(1,self.highest_orders+1):
             parameters_sum += self.q_network[num_orders].parameters()
@@ -618,7 +509,6 @@ class R_DDFGPolicy(MLPPolicy):
         self.rnn_critic_network.load_state_dict(source_policy.rnn_critic_network.state_dict())
         if self.use_vfunction:
             self.vtot_network.load_state_dict(source_policy.vtot_network.state_dict())
->>>>>>> 53301a4 (20250819)
         for num_orders in range(1,self.highest_orders+1):
             self.q_network[num_orders].load_state_dict(source_policy.q_network[num_orders].state_dict())
             if self.use_vfunction:

@@ -36,13 +36,9 @@ import random
 import pygame
 from offpolicy.utils.dict2namedtuple import convert
 from gym.spaces import Discrete
-<<<<<<< HEAD
-
-=======
 from PIL import Image, ImageDraw, ImageColor, ImageFont
 import copy
 import time
->>>>>>> 53301a4 (20250819)
 # Data type definitions
 int_type = np.int16
 float_type = np.float32
@@ -147,8 +143,6 @@ class StagHunt(MultiAgentEnv):
         self.capture_freezes = getattr(args, "capture_freezes", True)
         self.remove_frozen = getattr(args, "remove_frozen", False)
         self.prevent_cannibalism = getattr(args, "prevent_cannibalism", True) 
-<<<<<<< HEAD
-=======
         self.render_mode = "human"
         self.window_size = 500
         self.window = None
@@ -159,7 +153,6 @@ class StagHunt(MultiAgentEnv):
         self.AGENT_NEIGHBORHOOD_COLOR = (186, 238, 247)
         self.PREY_COLOR = 'red'
         self.viewer = None
->>>>>>> 53301a4 (20250819)
         # Define the internal state
         self.agents = np.zeros((self.n_agents, self.batch_size, 2), dtype=int_type)
         self.agents_not_frozen = np.ones((self.n_agents, self.batch_size), dtype=int_type)
@@ -177,10 +170,6 @@ class StagHunt(MultiAgentEnv):
         self.action_space = []
         self.observation_space = []
         self.share_observation_space = []
-<<<<<<< HEAD
-=======
-
->>>>>>> 53301a4 (20250819)
         for i in range(self.n_agents):
             self.action_space.append(Discrete(self.n_actions))
             self.observation_space.append(self.get_obs_size())
@@ -210,12 +199,6 @@ class StagHunt(MultiAgentEnv):
         if self.random_ghosts and self.random_ghosts_random_indicator:
             self.ghost_indicator_pos = self.ghost_indicator_potential_positions[
                 random.randint(0, len(self.ghost_indicator_potential_positions)-1)].tolist()
-<<<<<<< HEAD
-
-        # self.step(th.zeros(self.n_agents).fill_(self.action_labels['stay']))
-        return self.get_obs(), self.get_state(),self.get_avail_actions()
-
-=======
         # if self.render_mode == 'human':
         #     self._render_frame()
         #self.__draw_base_img()
@@ -303,7 +286,6 @@ class StagHunt(MultiAgentEnv):
         else:
             return np.transpose(pygame.surfarray.array3d(canvas), (1, 0, 2))
         
->>>>>>> 53301a4 (20250819)
     def step(self, actions):
         """ Execute a*bs actions in the environment. """
         if not self.batch_mode:
@@ -452,23 +434,16 @@ class StagHunt(MultiAgentEnv):
         #else:
             #for i in range(self.n_agents):
                 #info[i]["episode_limit"] = False
-<<<<<<< HEAD
-
-=======
         # if self.render_mode == 'human':
         #     self._render_frame()
         #self.render()
         # time.sleep(4)
->>>>>>> 53301a4 (20250819)
         if terminated[0].all() and self.print_caught_prey:
             print("Episode terminated at time %u with return %g" % (self.steps, self.sum_rewards))
         if self.batch_mode:
             return self.get_obs(), self.get_state(), reward, terminated, infos, self.get_avail_actions()
         else:
             return self.get_obs(), self.get_state(), reward[:,:,None], terminated[0], infos, self.get_avail_actions()
-<<<<<<< HEAD
-
-=======
         
 
     def close(self):
@@ -476,7 +451,6 @@ class StagHunt(MultiAgentEnv):
             pygame.quit()
             self.window = None
             self.clock = None
->>>>>>> 53301a4 (20250819)
     # ---------- OBSERVATION METHODS -----------------------------------------------------------------------------------
     def get_obs_agent(self, agent_id, batch=0):
         if self.observe_state:
@@ -560,31 +534,18 @@ class StagHunt(MultiAgentEnv):
         return info
 
     # --------- RENDER METHODS -----------------------------------------------------------------------------------------
-<<<<<<< HEAD
-    def close(self):
-        if self.made_screen:
-            pygame.quit()
-        print("Closing Multi-Agent Navigation")
-=======
     # def close(self):
     #     if self.made_screen:
     #         pygame.quit()
     #     print("Closing Multi-Agent Navigation")
->>>>>>> 53301a4 (20250819)
 
     def render_array(self):
         # Return an rgb array of the frame. Not implemented!
         return None
 
-<<<<<<< HEAD
-    def render(self):
-        # Not implemented!
-        pass
-=======
     # def render(self):
     #     # Not implemented!
     #     pass
->>>>>>> 53301a4 (20250819)
 
     def seed(self):
         raise NotImplementedError
@@ -726,10 +687,6 @@ class StagHunt(MultiAgentEnv):
         # Final check: if not all agents can see each other, the mutual knowledge is empty
         if noinformation:
             obs = 0 * obs
-<<<<<<< HEAD
-
-=======
->>>>>>> 53301a4 (20250819)
         # Mask out everything that is not in the cone, if directed_observations=True
         if self.directed_observations:
             obs = self._mask_invisible(obs, agent_ids)
@@ -739,8 +696,6 @@ class StagHunt(MultiAgentEnv):
             return obs, avail_all
         else:
             return obs[:, 0, :].squeeze(), avail_all
-<<<<<<< HEAD
-=======
     
     def draw_grid(self, rows, cols, cell_size=50, fill='black', line_color='black'):
         height = rows * cell_size
@@ -826,7 +781,6 @@ class StagHunt(MultiAgentEnv):
         _text = ', '.join([str(round(x, 2)) for x in score])
         ImageDraw.Draw(new_im).text((10, board_height // 3), text=_text, fill='black')
         return new_im
->>>>>>> 53301a4 (20250819)
 
     def _mask_agent(self, grid, pos, ashape):
         unknown_dim = 4 if self.observe_one_hot else 1
@@ -871,11 +825,8 @@ class StagHunt(MultiAgentEnv):
     @classmethod
     def get_action_id(cls, label):
         return cls.action_labels[label]
-<<<<<<< HEAD
-=======
     
     
->>>>>>> 53301a4 (20250819)
 
 # ######################################################################################################################
 '''if __name__ == "__main__":
@@ -1008,10 +959,7 @@ class StagHunt(MultiAgentEnv):
     if False:
         state = env.get_state()
         print(state)'''
-<<<<<<< HEAD
-=======
 
 
 
 
->>>>>>> 53301a4 (20250819)
