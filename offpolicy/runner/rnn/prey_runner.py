@@ -86,14 +86,16 @@ class PREYRunner(RecRunner):
                 if self.algorithm_name == 'casec' and self.independent_p_q:
                     _, p_rnn_states_batch ,_ = policy.get_p_hidden_states(obs_batch,last_acts_batch,p_rnn_states_batch)
                 if self.use_dyn_graph:   
-                    prob_adj, adj, _ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),states_batch,self.use_adj_init,dones,explore,self.total_env_steps)
+                    prob_adj, adj,_ =  self.adj_network.sample(obs_batch[None,:], rnn_states_batch.unsqueeze(0),self.use_adj_init,dones,explore,self.total_env_steps)
+
+                    #prob_adj, adj, _ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),states_batch,self.use_adj_init,dones,explore,self.total_env_steps)
                     adj_all = torch.cat([adj.cpu().detach(),torch.eye(self.num_agents,dtype=torch.int64).unsqueeze(0)],dim=2)
-                    prob_adj = prob_adj[0] 
-                    adj = adj[0]
+                    # prob_adj = prob_adj[0] 
+                    # adj = adj[0]
                 else:
                     prob_adj = torch.zeros((1,self.num_agents, self.num_factor),dtype=torch.float32)
                     adj = self.adj
-                    adj_all = adj      
+                    adj_all = torch.cat([adj.cpu().detach(),torch.eye(self.num_agents,dtype=torch.int64)],dim=1).unsqueeze(0)
                 if warmup:
                     acts_batch = policy.get_random_actions(obs_batch,avail_acts_batch)        
                 else:
@@ -104,7 +106,8 @@ class PREYRunner(RecRunner):
                                                                     explore=explore,
                                                                     p_rnn_states=p_rnn_states_batch.unsqueeze(0))
                     else:
-                        acts_batch,  qtot, _, f_q = policy.get_actions(rnn_states_batch.unsqueeze(0) ,
+                        acts_batch,  qtot, _, f_q = policy.get_actions(obs_batch[None,:],
+                                                                    rnn_states_batch.unsqueeze(0),
                                                                     torch.tensor(avail_acts_batch),
                                                                     t_env=self.total_env_steps,
                                                                     explore=explore,
@@ -112,9 +115,7 @@ class PREYRunner(RecRunner):
                                                                     no_sequence = False,
                                                                     dones = torch.tensor(dones))
                     if self.use_vfunction:
-                        f_v = policy.get_v_values(rnn_states_batch.unsqueeze(0) ,adj_all,no_sequence = False,
-                                                                    dones = torch.tensor(dones))
-                                 
+                        f_v = policy.get_v_values(rnn_states_batch.unsqueeze(0) ,states_batch[None,:], adj_all.to(self.device),no_sequence = False,dones = torch.tensor(dones).to(self.device))
             # get actions for all agents to step the env
             else:
                 if warmup:
@@ -138,7 +139,6 @@ class PREYRunner(RecRunner):
             acts_batch = acts_batch if isinstance(acts_batch, np.ndarray) else acts_batch.cpu().detach().numpy()
             rnn_states_batch = rnn_states_batch if isinstance(rnn_states_batch, np.ndarray) else rnn_states_batch.cpu().detach().numpy()
             p_rnn_states_batch = p_rnn_states_batch if isinstance(p_rnn_states_batch, np.ndarray) else p_rnn_states_batch.cpu().detach().numpy()
-
             last_acts_batch = acts_batch
 
             env_acts = np.split(acts_batch, self.num_envs)
@@ -187,9 +187,9 @@ class PREYRunner(RecRunner):
         if self.algorithm_name in self.adj_correlation:
             _, rnn_states_batch ,_ = policy.get_hidden_states(np.concatenate(obs),last_acts_batch,rnn_states_batch) 
             if self.use_dyn_graph:   
-                prob_adj, adj,_ =  self.adj_network.sample(rnn_states_batch.unsqueeze(0),np.concatenate(share_obs),self.use_adj_init,dones,explore,self.total_env_steps)
-                prob_adj = prob_adj[0] 
-                adj = adj[0]
+                prob_adj, adj,_ =  self.adj_network.sample(obs_batch[None,:], rnn_states_batch.unsqueeze(0),self.use_adj_init,dones,explore,self.total_env_steps)
+                # prob_adj = prob_adj[0] 
+                # adj = adj[0]
             else:
                 prob_adj = torch.zeros((1,self.num_agents, self.num_factor),dtype=torch.float32)
                 adj = self.adj

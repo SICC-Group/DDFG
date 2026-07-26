@@ -550,7 +550,7 @@ class RecRunner(object):
     def load_adj(self):
         """Load policies policies from pretrained models specified by path in config. Used for QMix and VDN."""
         path_adj = str(self.model_dir)
-        adj_state_dict = torch.load(path_adj + 'adj_network.pt')   
+        adj_state_dict = torch.load(path_adj + '/adj_network.pt')   
         self.adj_network.load_state_dict(adj_state_dict)
                     
     def restore_mdfg_cent(self):

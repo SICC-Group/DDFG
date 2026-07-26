@@ -90,9 +90,9 @@ class SMACRunner(RecRunner):
                     prob_adj, adj, _ =  self.adj_network.sample(obs_batch[None,:],rnn_states_batch.unsqueeze(0),self.use_adj_init,dones,explore,self.total_env_steps)
                     adj_all = torch.cat([adj.cpu().detach(),torch.eye(self.num_agents,dtype=torch.int64).unsqueeze(0)],dim=2)
                 else:
-                    prob_adj = torch.zeros((1, self.num_factor),dtype=torch.float32)
+                    prob_adj = torch.zeros((1, self.num_agents,self.num_factor),dtype=torch.float32)
                     adj = self.adj
-                    adj_all = adj.unsqueeze(0)
+                    adj_all = torch.cat([adj.cpu().detach(),torch.eye(self.num_agents,dtype=torch.int64)],dim=1).unsqueeze(0)
                 if warmup:
                     acts_batch = policy.get_random_actions(obs_batch,avail_acts_batch)
                 else:

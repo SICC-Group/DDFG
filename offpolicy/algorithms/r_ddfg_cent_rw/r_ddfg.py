@@ -177,7 +177,7 @@ class R_DDFG:
                 policy_v_tot = policy.get_vtot(state_obs_batch,rnn_critic).reshape(step,batch_size)
                 target_rnn_critic = policy.init_hidden(1,batch_size)
                 with torch.no_grad():
-                    target_policy_v_tot =policy.get_vtot(state_obs_batch,rnn_critic).reshape(step,batch_size)
+                    target_policy_v_tot = target_policy.get_vtot(state_obs_batch,target_rnn_critic).reshape(step,batch_size)
                 policy_v = policy.get_v_values(rnn_obs_q.detach(),state_obs_batch[:-1].reshape((step-1)*batch_size,1,-1),adj_input_q,no_sequence,dones_q)
                 '''with torch.no_grad():
                     target_policy_v =target_policy.get_v_values(rnn_target_obs,state_obs_batch[1:].reshape((step-1)*batch_size,1,-1), adj_input_qtot,no_sequence,dones_qtot)'''

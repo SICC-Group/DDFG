@@ -312,7 +312,8 @@ class AdjPolicyBuffer(object):
         
         f_advt = self.f_advt
         f_advt_copy = f_advt.copy()
-        f_advt_copy[np.tile(dones_env,self.num_factor) == 1.0] = np.nan
+        mask = np.repeat(dones_env[..., None], self.num_factor, axis=2)  # (T, B, F, 1)
+        f_advt_copy[mask == 1.0] = np.nan
         mean_advt_f = np.nanmean(f_advt_copy)
         std_advt_f = np.nanstd(f_advt_copy)
         '''f_advt_copy = f_advt.copy()

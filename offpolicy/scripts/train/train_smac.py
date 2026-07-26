@@ -133,7 +133,7 @@ def main(args):
     num_agents = get_map_params(all_args.map_name)["n_agents"]
 
     if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rmdfg","rmdfg_cent","rddfg_cent_rw","rmfg_cent"]:
-        num_factor = num_agents * (num_agents-1) // 2 + num_agents
+        num_factor = num_agents * (num_agents-1) // 2 
     else:
         num_factor = int(math.factorial(num_agents)//(math.factorial(all_args.highest_orders)*math.factorial(num_agents-all_args.highest_orders)) * all_args.sparsity)
         #num_factor = num_agents
@@ -170,7 +170,7 @@ def main(args):
     if all_args.algorithm_name in ["rmatd3", "rmaddpg", "rmasac", "qtran","wqmix","qmix", "vdn","qplex","rddfg_cent_rw","rddfg_low","rmfg_cent","sopcg","casec"]:
         from offpolicy.runner.rnn.smac_runner import SMACRunner as Runner
         #assert all_args.n_rollout_threads == 1, ("only support 1 env in recurrent version.")
-        eval_env = make_train_env(all_args)
+        eval_env = make_eval_env(all_args)
     elif all_args.algorithm_name in ["matd3", "maddpg", "masac", "mqmix", "mvdn",'mqtran']:
         from offpolicy.runner.mlp.smac_runner import SMACRunner as Runner
         eval_env = make_eval_env(all_args)
@@ -186,9 +186,9 @@ def main(args):
                 adj[i,index] = 1
                 adj[j,index] = 1
                 index = index + 1
-        for i in range(index,num_factor):
-            adj[n,i] = 1
-            n = n + 1
+        # for i in range(index,num_factor):
+        #     adj[n,i] = 1
+        #     n = n + 1
 
     config = {"args": all_args,
               "policy_info": policy_info,

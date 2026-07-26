@@ -169,7 +169,11 @@ def main(args):
 
     env = make_train_env(all_args)
     num_agents = all_args.num_agents
-    all_args.num_factor = int(math.factorial(num_agents)//(math.factorial(all_args.highest_orders)*math.factorial(num_agents-all_args.highest_orders)) * all_args.sparsity)
+    if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rmdfg","rmdfg_cent","rddfg_cent_rw","rmfg_cent"]:
+        num_factor = num_agents * (num_agents-1) // 2 
+    else:
+        num_factor = int(math.factorial(num_agents)//(math.factorial(all_args.highest_orders)*math.factorial(num_agents-all_args.highest_orders)) * all_args.sparsity)
+    all_args.num_factor = num_factor
     # create policies and mapping fn
     if all_args.share_policy:
         print(env.share_observation_space[0])
@@ -209,15 +213,15 @@ def main(args):
     adj = torch.zeros((all_args.num_agents,all_args.num_factor),dtype=torch.int64)
     index = 0
     n = 0
-    if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rddfg_cent_rw","rddfg_low","sopcg","casec"]:
+    if all_args.use_dyn_graph == False and all_args.equal_vdn == False and all_args.algorithm_name in ["rmfg_cent","rddfg_cent_rw","rddfg_low"]:
         for i in range(all_args.num_agents-1):
             for j in range(i+1,all_args.num_agents):
                 adj[i,index] = 1
                 adj[j,index] = 1
                 index = index + 1
-        for i in range(index,all_args.num_factor):
-            adj[n,i] = 1
-            n = n + 1
+        # for i in range(index,all_args.num_factor):
+        #     adj[n,i] = 1
+        #     n = n + 1
                
     config = {"args": all_args,
               "policy_info": policy_info,
